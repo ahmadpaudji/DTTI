@@ -184,6 +184,7 @@ CREATE TABLE `tb_pegawai` (
   `id_pgw` int(100) NOT NULL AUTO_INCREMENT,
   `id_dtl_jbt` int(100) DEFAULT NULL,
   `no_abs_pgw` int(30) NOT NULL COMMENT 'nomor absen',
+  `nik_pgw` int(20) DEFAULT NULL,
   `no_ktp_pgw` varchar(50) DEFAULT NULL,
   `npwp_pgw` varchar(50) DEFAULT NULL,
   `nma_lkp_pgw` varchar(100) NOT NULL COMMENT 'nama lengkap',
