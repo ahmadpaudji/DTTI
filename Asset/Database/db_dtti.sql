@@ -31,37 +31,6 @@ CREATE TABLE `tb_anak` (
 
 /*Data for the table `tb_anak` */
 
-/*Table structure for table `tb_anggota` */
-
-DROP TABLE IF EXISTS `tb_anggota`;
-
-CREATE TABLE `tb_anggota` (
-  `id_agt` int(20) NOT NULL AUTO_INCREMENT,
-  `no_ktp_agt` varchar(40) DEFAULT NULL,
-  `npwp_agt` varchar(30) DEFAULT NULL,
-  `nma_lkp_agt` varchar(100) NOT NULL,
-  `email_agt` varchar(50) NOT NULL,
-  `almt_agt` text NOT NULL,
-  `jk_agt` enum('L','P') NOT NULL,
-  `stat_agt` enum('menikah','belum menikah') NOT NULL,
-  `lev_usr_agt` enum('admin','user','super user') NOT NULL,
-  `uname_agt` varchar(20) NOT NULL,
-  `pass_agt` varchar(20) NOT NULL,
-  `photo_agt` varchar(100) DEFAULT NULL,
-  `tmp_lhr_agt` varchar(50) NOT NULL,
-  `tgl_lhr_agt` date NOT NULL,
-  `hp_agt` varchar(15) NOT NULL,
-  `telp_agt` varchar(15) DEFAULT NULL,
-  `gol_drh_agt` enum('A','B','O','AB') DEFAULT NULL,
-  `nma_psg_agt` varchar(100) DEFAULT NULL,
-  `pc_ktp_agt` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_agt`),
-  UNIQUE KEY `npwp_agt` (`npwp_agt`),
-  UNIQUE KEY `no_ktp_agt` (`no_ktp_agt`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_anggota` */
-
 /*Table structure for table `tb_bank` */
 
 DROP TABLE IF EXISTS `tb_bank`;
@@ -156,8 +125,8 @@ CREATE TABLE `tb_detil_informal` (
   PRIMARY KEY (`id_dtl_informal`),
   KEY `FK_tb_detil_informal` (`id_pnd_informal`),
   KEY `FK_tb_detil_informal2` (`id_pgw`),
-  CONSTRAINT `FK_tb_detil_informal2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_tb_detil_informal` FOREIGN KEY (`id_pnd_informal`) REFERENCES `tb_informal` (`id_pnd_informal`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_tb_detil_informal` FOREIGN KEY (`id_pnd_informal`) REFERENCES `tb_informal` (`id_pnd_informal`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_detil_informal2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_detil_informal` */
@@ -173,8 +142,8 @@ CREATE TABLE `tb_detil_jabatan` (
   PRIMARY KEY (`id_dtl_jbt`),
   KEY `FK_tb_detil_jabatan` (`id_divisi`),
   KEY `FK_tb_detil_jabatan2` (`id_jbtn`),
-  CONSTRAINT `FK_tb_detil_jabatan2` FOREIGN KEY (`id_jbtn`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_tb_detil_jabatan` FOREIGN KEY (`id_divisi`) REFERENCES `tb_divisi` (`id_divisi`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_tb_detil_jabatan` FOREIGN KEY (`id_divisi`) REFERENCES `tb_divisi` (`id_divisi`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_detil_jabatan2` FOREIGN KEY (`id_jbtn`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_detil_jabatan` */
@@ -190,8 +159,8 @@ CREATE TABLE `tb_detil_pelatihan` (
   PRIMARY KEY (`id_dtl_lth`),
   KEY `FK_tb_detil_pelatihan` (`id_lth`),
   KEY `FK_tb_detil_pelatihan2` (`id_pgw`),
-  CONSTRAINT `FK_tb_detil_pelatihan2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_tb_detil_pelatihan` FOREIGN KEY (`id_lth`) REFERENCES `tb_pelatihan` (`id_lth`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_tb_detil_pelatihan` FOREIGN KEY (`id_lth`) REFERENCES `tb_pelatihan` (`id_lth`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_detil_pelatihan2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_detil_pelatihan` */
@@ -283,7 +252,7 @@ CREATE TABLE `tb_jabatan` (
   `id_jbtn` int(20) NOT NULL AUTO_INCREMENT,
   `nma_jbt` varchar(20) NOT NULL,
   PRIMARY KEY (`id_jbtn`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_jabatan` */
 
@@ -311,11 +280,12 @@ CREATE TABLE `tb_kendaraan_motor` (
 DROP TABLE IF EXISTS `tb_komisaris`;
 
 CREATE TABLE `tb_komisaris` (
-  `id_komisaris` int(11) DEFAULT NULL,
-  `id_agt` int(11) DEFAULT NULL,
+  `id_komisaris` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pgna` int(11) DEFAULT NULL,
   `jns_komisaris` enum('komisaris','komisaris utama') DEFAULT NULL,
-  KEY `FK_tb_komisaris` (`id_agt`),
-  CONSTRAINT `FK_tb_komisaris` FOREIGN KEY (`id_agt`) REFERENCES `tb_anggota` (`id_agt`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id_komisaris`),
+  KEY `FK_tb_komisaris` (`id_pgna`),
+  CONSTRAINT `FK_tb_komisaris` FOREIGN KEY (`id_pgna`) REFERENCES `tb_pengguna` (`id_pgna`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_komisaris` */
@@ -332,8 +302,8 @@ CREATE TABLE `tb_muhasabah` (
   PRIMARY KEY (`id_mhb`),
   KEY `FK_tb_muhasabah` (`id_ibd`),
   KEY `FK_tb_muhasabah2` (`id_pgw`),
-  CONSTRAINT `FK_tb_muhasabah2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_tb_muhasabah` FOREIGN KEY (`id_ibd`) REFERENCES `tb_detil_ibadah` (`id_ibd`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `FK_tb_muhasabah` FOREIGN KEY (`id_ibd`) REFERENCES `tb_detil_ibadah` (`id_ibd`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_muhasabah2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_muhasabah` */
@@ -344,7 +314,7 @@ DROP TABLE IF EXISTS `tb_pegawai`;
 
 CREATE TABLE `tb_pegawai` (
   `id_pgw` int(20) NOT NULL AUTO_INCREMENT,
-  `id_agt` int(20) DEFAULT NULL,
+  `id_pgna` int(20) DEFAULT NULL,
   `id_dtl_jbt` int(100) DEFAULT NULL,
   `nik_pgw` varchar(30) DEFAULT NULL,
   `no_peg_pgw` int(30) NOT NULL COMMENT 'nomor presensi',
@@ -354,8 +324,8 @@ CREATE TABLE `tb_pegawai` (
   UNIQUE KEY `no_abs_pgw_2` (`no_peg_pgw`),
   UNIQUE KEY `nik_pgw` (`nik_pgw`),
   KEY `FK_tb_pegawai` (`id_dtl_jbt`),
-  KEY `FK_tb_pegawai2` (`id_agt`),
-  CONSTRAINT `FK_tb_pegawai2` FOREIGN KEY (`id_agt`) REFERENCES `tb_anggota` (`id_agt`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `FK_tb_pegawai2` (`id_pgna`),
+  CONSTRAINT `FK_tb_pegawai2` FOREIGN KEY (`id_pgna`) REFERENCES `tb_pengguna` (`id_pgna`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tb_pegawai_ibfk_1` FOREIGN KEY (`id_dtl_jbt`) REFERENCES `tb_detil_jabatan` (`id_dtl_jbt`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -397,6 +367,37 @@ CREATE TABLE `tb_pengalaman_kerja` (
 
 /*Data for the table `tb_pengalaman_kerja` */
 
+/*Table structure for table `tb_pengguna` */
+
+DROP TABLE IF EXISTS `tb_pengguna`;
+
+CREATE TABLE `tb_pengguna` (
+  `id_pgna` int(20) NOT NULL AUTO_INCREMENT,
+  `no_ktp_agt` varchar(40) DEFAULT NULL,
+  `npwp_agt` varchar(30) DEFAULT NULL,
+  `nma_lkp_agt` varchar(100) NOT NULL,
+  `email_agt` varchar(50) NOT NULL,
+  `almt_agt` text NOT NULL,
+  `jk_agt` enum('L','P') NOT NULL,
+  `stat_agt` enum('menikah','belum menikah') NOT NULL,
+  `lev_usr_agt` enum('admin','user','special user') NOT NULL,
+  `uname_agt` varchar(20) NOT NULL,
+  `pass_agt` varchar(20) NOT NULL,
+  `photo_agt` varchar(100) DEFAULT NULL,
+  `tmp_lhr_agt` varchar(50) NOT NULL,
+  `tgl_lhr_agt` date NOT NULL,
+  `hp_agt` varchar(15) NOT NULL,
+  `telp_agt` varchar(15) DEFAULT NULL,
+  `gol_drh_agt` enum('A','B','O','AB') DEFAULT NULL,
+  `nma_psg_agt` varchar(100) DEFAULT NULL,
+  `pc_ktp_agt` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_pgna`),
+  UNIQUE KEY `npwp_agt` (`npwp_agt`),
+  UNIQUE KEY `no_ktp_agt` (`no_ktp_agt`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_pengguna` */
+
 /*Table structure for table `tb_presensi` */
 
 DROP TABLE IF EXISTS `tb_presensi`;
@@ -432,8 +433,8 @@ CREATE TABLE `tb_rek_bank` (
   PRIMARY KEY (`id_dtl_bank`),
   KEY `FK_tb_rek_bank` (`id_bank`),
   KEY `FK_tb_rek_bank2` (`id_pgw`),
-  CONSTRAINT `FK_tb_rek_bank2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_tb_rek_bank` FOREIGN KEY (`id_bank`) REFERENCES `tb_bank` (`id_bank`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_tb_rek_bank` FOREIGN KEY (`id_bank`) REFERENCES `tb_bank` (`id_bank`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_tb_rek_bank2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_rek_bank` */
