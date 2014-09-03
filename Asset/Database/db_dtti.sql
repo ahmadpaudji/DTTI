@@ -31,6 +31,37 @@ CREATE TABLE `tb_anak` (
 
 /*Data for the table `tb_anak` */
 
+/*Table structure for table `tb_anggota` */
+
+DROP TABLE IF EXISTS `tb_anggota`;
+
+CREATE TABLE `tb_anggota` (
+  `id_agt` int(20) NOT NULL AUTO_INCREMENT,
+  `no_ktp_agt` varchar(40) DEFAULT NULL,
+  `npwp_agt` varchar(30) DEFAULT NULL,
+  `nma_lkp_agt` varchar(100) NOT NULL,
+  `email_agt` varchar(50) NOT NULL,
+  `almt_agt` text NOT NULL,
+  `jk_agt` enum('L','P') NOT NULL,
+  `stat_agt` enum('menikah','belum menikah') NOT NULL,
+  `lev_usr_agt` enum('admin','user','super user') NOT NULL,
+  `uname_agt` varchar(20) NOT NULL,
+  `pass_agt` varchar(20) NOT NULL,
+  `photo_agt` varchar(100) DEFAULT NULL,
+  `tmp_lhr_agt` varchar(50) NOT NULL,
+  `tgl_lhr_agt` date NOT NULL,
+  `hp_agt` varchar(15) NOT NULL,
+  `telp_agt` varchar(15) DEFAULT NULL,
+  `gol_drh_agt` enum('A','B','O','AB') DEFAULT NULL,
+  `nma_psg_agt` varchar(100) DEFAULT NULL,
+  `pc_ktp_agt` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_agt`),
+  UNIQUE KEY `npwp_agt` (`npwp_agt`),
+  UNIQUE KEY `no_ktp_agt` (`no_ktp_agt`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_anggota` */
+
 /*Table structure for table `tb_bank` */
 
 DROP TABLE IF EXISTS `tb_bank`;
@@ -45,6 +76,35 @@ CREATE TABLE `tb_bank` (
 /*Data for the table `tb_bank` */
 
 insert  into `tb_bank`(`id_bank`,`sktn_bank`,`nma_bank`) values (1,'BNI','Bank Negara Indonesia'),(2,'BRI ','Bank Rakyat Indonesia'),(3,'MDR','Bank Mandiri'),(4,'BCA','Bank Central Asia'),(5,'BMT','Bank Darut Tauhid'),(6,'BJB','Bank Jawa Barat'),(7,'MLT','Bank Muamalat');
+
+/*Table structure for table `tb_cuti` */
+
+DROP TABLE IF EXISTS `tb_cuti`;
+
+CREATE TABLE `tb_cuti` (
+  `id_cuti` int(20) NOT NULL AUTO_INCREMENT,
+  `id_pgw` int(20) NOT NULL,
+  `almt_cuti` text NOT NULL,
+  `thn_cuti` year(4) NOT NULL COMMENT 'tahun periode cuti',
+  `tgl_pjn_cuti` datetime NOT NULL COMMENT 'tanggal pengajuan cuti ',
+  `sisa_sbm_cuti` int(20) NOT NULL DEFAULT '30' COMMENT 'sisa cuti sebelumnya',
+  `tgl_mli_cuti` date NOT NULL,
+  `tgl_akr_cuti` date NOT NULL,
+  `tgl_krj_cuti` date NOT NULL COMMENT 'tanggal mulai kerja',
+  `jml_cuti` int(20) NOT NULL DEFAULT '0' COMMENT 'maksimal 3',
+  `total_cuti` int(20) DEFAULT '0' COMMENT 'total keseluruhan cuti yang telah diambil',
+  `sisa_cuti` int(20) NOT NULL DEFAULT '0',
+  `alasan_cuti` varchar(50) NOT NULL,
+  `catatan_cuti` text,
+  `stat_cuti` enum('Y','T','N') NOT NULL DEFAULT 'N' COMMENT 'status',
+  `apprv_cuti` varchar(100) NOT NULL COMMENT 'yang approve cuti',
+  `apprv_jbtn_cuti` varchar(50) NOT NULL COMMENT 'jabatan approver cuti',
+  PRIMARY KEY (`id_cuti`),
+  KEY `FK_tb_cuti` (`id_pgw`),
+  CONSTRAINT `FK_tb_cuti` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_cuti` */
 
 /*Table structure for table `tb_detil_formal` */
 
@@ -66,6 +126,22 @@ CREATE TABLE `tb_detil_formal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_detil_formal` */
+
+/*Table structure for table `tb_detil_ibadah` */
+
+DROP TABLE IF EXISTS `tb_detil_ibadah`;
+
+CREATE TABLE `tb_detil_ibadah` (
+  `id_dtl_ibd` int(20) NOT NULL AUTO_INCREMENT,
+  `id_ibd` int(20) NOT NULL,
+  `prd_awl` date NOT NULL COMMENT 'periode awal tgl',
+  `prd_akr` date NOT NULL COMMENT 'periode akhir tgl',
+  PRIMARY KEY (`id_dtl_ibd`),
+  KEY `FK_tb_detil_ibadah` (`id_ibd`),
+  CONSTRAINT `FK_tb_detil_ibadah` FOREIGN KEY (`id_ibd`) REFERENCES `tb_ibadah` (`id_ibd`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_detil_ibadah` */
 
 /*Table structure for table `tb_detil_informal` */
 
@@ -96,11 +172,29 @@ CREATE TABLE `tb_detil_jabatan` (
   `id_divisi` int(20) NOT NULL,
   PRIMARY KEY (`id_dtl_jbt`),
   KEY `FK_tb_detil_jabatan` (`id_divisi`),
-  CONSTRAINT `FK_tb_detil_jabatan2` FOREIGN KEY (`id_dtl_jbt`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `FK_tb_detil_jabatan2` (`id_jbtn`),
+  CONSTRAINT `FK_tb_detil_jabatan2` FOREIGN KEY (`id_jbtn`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_tb_detil_jabatan` FOREIGN KEY (`id_divisi`) REFERENCES `tb_divisi` (`id_divisi`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_detil_jabatan` */
+
+/*Table structure for table `tb_detil_pelatihan` */
+
+DROP TABLE IF EXISTS `tb_detil_pelatihan`;
+
+CREATE TABLE `tb_detil_pelatihan` (
+  `id_dtl_lth` int(20) NOT NULL AUTO_INCREMENT,
+  `id_lth` int(20) NOT NULL,
+  `id_pgw` int(20) NOT NULL,
+  PRIMARY KEY (`id_dtl_lth`),
+  KEY `FK_tb_detil_pelatihan` (`id_lth`),
+  KEY `FK_tb_detil_pelatihan2` (`id_pgw`),
+  CONSTRAINT `FK_tb_detil_pelatihan2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_detil_pelatihan` FOREIGN KEY (`id_lth`) REFERENCES `tb_pelatihan` (`id_lth`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_detil_pelatihan` */
 
 /*Table structure for table `tb_divisi` */
 
@@ -131,6 +225,21 @@ CREATE TABLE `tb_formal` (
 
 insert  into `tb_formal`(`id_pnd_formal`,`skt_pnd_formal`,`nma_pnd_formal`) values (1,'TK','Taman Kanak'),(2,'SD','Sekolah Dasar'),(3,'SMP ','Sekolah Menengah Pertama'),(4,'SMA','Sekolah Menengah Atas'),(5,'SMK','Sekolah Menengah Kejuruan'),(6,'D1','Diploma 1'),(7,'D2','Diploma 2'),(8,'D3','Diploma 3'),(9,'S1','Sarjana'),(10,'S2','Master '),(11,'S3','Doktor ');
 
+/*Table structure for table `tb_ibadah` */
+
+DROP TABLE IF EXISTS `tb_ibadah`;
+
+CREATE TABLE `tb_ibadah` (
+  `id_ibd` int(11) NOT NULL AUTO_INCREMENT,
+  `jns_ibd` enum('tahajud','tadarus','shadaqoh','shaum sunat') NOT NULL,
+  `tgt_ibd` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_ibd`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_ibadah` */
+
+insert  into `tb_ibadah`(`id_ibd`,`jns_ibd`,`tgt_ibd`) values (1,'shadaqoh',30),(2,'shaum sunat',8),(3,'tadarus',30),(4,'tahajud',30);
+
 /*Table structure for table `tb_informal` */
 
 DROP TABLE IF EXISTS `tb_informal`;
@@ -145,6 +254,27 @@ CREATE TABLE `tb_informal` (
 
 insert  into `tb_informal`(`id_pnd_informal`,`nma_pnd_informal`) values (1,'Kursus'),(2,'Pelatihan'),(3,'Seminar'),(4,'Sertifikasi');
 
+/*Table structure for table `tb_izin_absen` */
+
+DROP TABLE IF EXISTS `tb_izin_absen`;
+
+CREATE TABLE `tb_izin_absen` (
+  `id_abs` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pgw` int(11) NOT NULL,
+  `tgl_pjn_abs` date NOT NULL COMMENT 'tangal pengajuan ijin presensi',
+  `als_abs` text NOT NULL COMMENT 'alasan ',
+  `puk_awl_abs` time DEFAULT NULL COMMENT 'jam mulai ijin',
+  `puk_akr_abs` time DEFAULT NULL COMMENT 'jam akhir ijin',
+  `wkt_abs` date NOT NULL COMMENT 'waktu ijin ',
+  `ctn_abs` text NOT NULL COMMENT 'catatan',
+  `stat_abs` enum('N','Y','T') NOT NULL DEFAULT 'N' COMMENT 'status konfirmasi absensi',
+  `apprv_abs` varchar(100) DEFAULT NULL COMMENT 'yang approve absensi',
+  `jbt_abs` varchar(50) DEFAULT NULL COMMENT 'jabatan approve absensi',
+  PRIMARY KEY (`id_abs`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_izin_absen` */
+
 /*Table structure for table `tb_jabatan` */
 
 DROP TABLE IF EXISTS `tb_jabatan`;
@@ -157,7 +287,7 @@ CREATE TABLE `tb_jabatan` (
 
 /*Data for the table `tb_jabatan` */
 
-insert  into `tb_jabatan`(`id_jbtn`,`nma_jbt`) values (0,''),(1,'Direktur'),(2,'Komisaris'),(3,'Kepala'),(4,'Staff Administartif'),(5,'Staff Keuangan'),(6,'Staff Event Organize'),(7,'Supervisor'),(8,'Manajer'),(9,'Staff Sales Excecuti'),(10,'Staff Telemarketing'),(11,'Staff Operasional Ma'),(12,'Staff Customer Servi');
+insert  into `tb_jabatan`(`id_jbtn`,`nma_jbt`) values (0,''),(1,'Direktur'),(3,'Kepala'),(4,'Staff Administartif'),(5,'Staff Keuangan'),(6,'Staff Event Organize'),(7,'Supervisor'),(8,'Manajer'),(9,'Staff Sales Excecuti'),(10,'Staff Telemarketing'),(11,'Staff Operasional Ma'),(12,'Staff Customer Servi');
 
 /*Table structure for table `tb_kendaraan_motor` */
 
@@ -176,39 +306,79 @@ CREATE TABLE `tb_kendaraan_motor` (
 
 /*Data for the table `tb_kendaraan_motor` */
 
+/*Table structure for table `tb_komisaris` */
+
+DROP TABLE IF EXISTS `tb_komisaris`;
+
+CREATE TABLE `tb_komisaris` (
+  `id_komisaris` int(11) DEFAULT NULL,
+  `id_agt` int(11) DEFAULT NULL,
+  `jns_komisaris` enum('komisaris','komisaris utama') DEFAULT NULL,
+  KEY `FK_tb_komisaris` (`id_agt`),
+  CONSTRAINT `FK_tb_komisaris` FOREIGN KEY (`id_agt`) REFERENCES `tb_anggota` (`id_agt`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_komisaris` */
+
+/*Table structure for table `tb_muhasabah` */
+
+DROP TABLE IF EXISTS `tb_muhasabah`;
+
+CREATE TABLE `tb_muhasabah` (
+  `id_mhb` int(20) NOT NULL AUTO_INCREMENT,
+  `id_ibd` int(20) NOT NULL,
+  `id_pgw` int(20) NOT NULL,
+  `tgl_ibd` date NOT NULL,
+  PRIMARY KEY (`id_mhb`),
+  KEY `FK_tb_muhasabah` (`id_ibd`),
+  KEY `FK_tb_muhasabah2` (`id_pgw`),
+  CONSTRAINT `FK_tb_muhasabah2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_muhasabah` FOREIGN KEY (`id_ibd`) REFERENCES `tb_detil_ibadah` (`id_ibd`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_muhasabah` */
+
 /*Table structure for table `tb_pegawai` */
 
 DROP TABLE IF EXISTS `tb_pegawai`;
 
 CREATE TABLE `tb_pegawai` (
-  `id_pgw` int(100) NOT NULL AUTO_INCREMENT,
+  `id_pgw` int(20) NOT NULL AUTO_INCREMENT,
+  `id_agt` int(20) DEFAULT NULL,
   `id_dtl_jbt` int(100) DEFAULT NULL,
-  `no_abs_pgw` int(30) NOT NULL COMMENT 'nomor absen',
-  `nik_pgw` int(20) DEFAULT NULL,
-  `no_ktp_pgw` varchar(50) DEFAULT NULL,
-  `npwp_pgw` varchar(50) DEFAULT NULL,
-  `nma_lkp_pgw` varchar(100) NOT NULL COMMENT 'nama lengkap',
-  `tgl_lhr_pgw` date DEFAULT NULL,
-  `tmp_lhr_pgw` varchar(50) NOT NULL,
-  `almt_pgw` text COMMENT 'alamat rumah',
-  `telp_pgw` int(15) DEFAULT NULL COMMENT 'telpon rumah',
-  `hp_pgw` int(15) NOT NULL,
-  `gol_drh_pgw` enum('A','B','O','AB') NOT NULL,
-  `nma_psg_pgw` varchar(100) DEFAULT NULL COMMENT 'nama pasangan',
-  `jk_pgw` enum('L','P') NOT NULL,
-  `stat_pgw` enum('Menikah','Belum Menikah') NOT NULL COMMENT 'status',
-  `mail_pgw` varchar(30) DEFAULT NULL COMMENT 'nama email',
-  `uname` varchar(20) NOT NULL,
-  `passwd` varchar(20) NOT NULL,
-  `lev_usr` enum('Administrator','User','Super User') NOT NULL COMMENT 'level user',
-  `photo_pgw` varchar(100) DEFAULT NULL COMMENT 'gambar',
-  `pc_ktp_pgw` varchar(100) DEFAULT NULL COMMENT 'gambar ktp',
-  PRIMARY KEY (`id_pgw`,`no_abs_pgw`),
+  `nik_pgw` varchar(30) DEFAULT NULL,
+  `no_peg_pgw` int(30) NOT NULL COMMENT 'nomor presensi',
+  `no_akun_pgw` int(30) DEFAULT NULL COMMENT 'nomor akun presensi',
+  PRIMARY KEY (`id_pgw`),
+  UNIQUE KEY `no_abs_pgw` (`no_peg_pgw`),
+  UNIQUE KEY `no_abs_pgw_2` (`no_peg_pgw`),
+  UNIQUE KEY `nik_pgw` (`nik_pgw`),
   KEY `FK_tb_pegawai` (`id_dtl_jbt`),
+  KEY `FK_tb_pegawai2` (`id_agt`),
+  CONSTRAINT `FK_tb_pegawai2` FOREIGN KEY (`id_agt`) REFERENCES `tb_anggota` (`id_agt`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tb_pegawai_ibfk_1` FOREIGN KEY (`id_dtl_jbt`) REFERENCES `tb_detil_jabatan` (`id_dtl_jbt`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_pegawai` */
+
+/*Table structure for table `tb_pelatihan` */
+
+DROP TABLE IF EXISTS `tb_pelatihan`;
+
+CREATE TABLE `tb_pelatihan` (
+  `id_lth` int(20) NOT NULL AUTO_INCREMENT,
+  `tgl_pjn_lth` date NOT NULL COMMENT 'tanggal pengajuan',
+  `nma_pju_lth` varchar(100) NOT NULL COMMENT 'nama pengaju pelatihan',
+  `nma_lth` varchar(100) NOT NULL COMMENT 'nama pelatihan',
+  `waktu_lth` datetime NOT NULL,
+  `tmp_lth` varchar(100) NOT NULL COMMENT 'tempat pelatihan',
+  `stat_lth` enum('N','Y','T') NOT NULL DEFAULT 'N',
+  `apprv_lth` varchar(100) DEFAULT NULL,
+  `jbt_apprv_lth` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_lth`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_pelatihan` */
 
 /*Table structure for table `tb_pengalaman_kerja` */
 
@@ -226,6 +396,29 @@ CREATE TABLE `tb_pengalaman_kerja` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_pengalaman_kerja` */
+
+/*Table structure for table `tb_presensi` */
+
+DROP TABLE IF EXISTS `tb_presensi`;
+
+CREATE TABLE `tb_presensi` (
+  `id_prs` int(20) NOT NULL AUTO_INCREMENT COMMENT 'no absensi',
+  `id_pgw` int(20) NOT NULL COMMENT 'no akun absensii',
+  `tgl_prs` date NOT NULL COMMENT 'tanggal presensi',
+  `jm_msk_prs` time DEFAULT NULL COMMENT 'jam masuk',
+  `jm_klr_prs` time DEFAULT NULL COMMENT 'jam keluar',
+  `tlt_prs` time DEFAULT NULL COMMENT 'telat ',
+  `plg_awl_prs` time DEFAULT NULL COMMENT 'pulang awal ',
+  `stat_prs` enum('hadir','sakit','ijin','alpha','cuti','libur') NOT NULL COMMENT 'status presensi',
+  `wkt_krj` time DEFAULT NULL COMMENT 'waktu kerja',
+  `lma_hdr` time DEFAULT NULL COMMENT 'lama hadir',
+  `ket_prs` text COMMENT 'keterangan',
+  PRIMARY KEY (`id_prs`),
+  KEY `FK_tb_presensi` (`id_pgw`),
+  CONSTRAINT `FK_tb_presensi` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_presensi` */
 
 /*Table structure for table `tb_rek_bank` */
 
