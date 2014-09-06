@@ -12,6 +12,20 @@ MySQL - 5.6.17 : Database - db_dtti
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*Table structure for table `tb_akun` */
+
+DROP TABLE IF EXISTS `tb_akun`;
+
+CREATE TABLE `tb_akun` (
+  `no_akun_pgw` int(20) NOT NULL COMMENT 'nomor akun absen',
+  `id_pgw` int(20) NOT NULL,
+  PRIMARY KEY (`no_akun_pgw`),
+  KEY `FK_tb_akun` (`id_pgw`),
+  CONSTRAINT `FK_tb_akun` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_akun` */
+
 /*Table structure for table `tb_anak` */
 
 DROP TABLE IF EXISTS `tb_anak`;
@@ -239,11 +253,8 @@ DROP TABLE IF EXISTS `tb_pegawai`;
 
 CREATE TABLE `tb_pegawai` (
   `id_pgw` int(20) NOT NULL AUTO_INCREMENT,
-  `id_pgna` int(20) DEFAULT NULL,
   `id_jbtn` int(100) DEFAULT NULL,
   `nik_pgw` varchar(30) DEFAULT NULL,
-  `no_peg_pgw` int(30) NOT NULL COMMENT 'nomor presensi',
-  `no_akun_pgw` int(30) DEFAULT NULL COMMENT 'nomor akun presensi',
   `no_ktp_pgw` varchar(40) DEFAULT NULL,
   `npwp_pgw` varchar(30) DEFAULT NULL,
   `nma_lkp_pgw` varchar(100) NOT NULL,
@@ -264,10 +275,9 @@ CREATE TABLE `tb_pegawai` (
   `pc_ktp_pgw` varchar(100) DEFAULT NULL,
   `stat_akt_pgw` enum('Y','T') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`id_pgw`),
-  UNIQUE KEY `no_abs_pgw` (`no_peg_pgw`),
-  UNIQUE KEY `no_abs_pgw_2` (`no_peg_pgw`),
   UNIQUE KEY `nik_pgw` (`nik_pgw`),
-  KEY `FK_tb_pegawai2` (`id_pgna`),
+  UNIQUE KEY `no_ktp_pgw` (`no_ktp_pgw`),
+  UNIQUE KEY `npwp_pgw` (`npwp_pgw`),
   KEY `FK_tb_pegawai` (`id_jbtn`),
   CONSTRAINT `FK_tb_pegawai` FOREIGN KEY (`id_jbtn`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -316,7 +326,7 @@ DROP TABLE IF EXISTS `tb_presensi`;
 
 CREATE TABLE `tb_presensi` (
   `id_prs` int(20) NOT NULL AUTO_INCREMENT COMMENT 'no absensi',
-  `id_pgw` int(20) NOT NULL COMMENT 'no akun absensii',
+  `no_akun_pgw` int(20) NOT NULL COMMENT 'no akun absensii',
   `tgl_prs` date NOT NULL COMMENT 'tanggal presensi',
   `jm_msk_prs` time DEFAULT NULL COMMENT 'jam masuk',
   `jm_klr_prs` time DEFAULT NULL COMMENT 'jam keluar',
@@ -327,8 +337,8 @@ CREATE TABLE `tb_presensi` (
   `lma_hdr` time DEFAULT NULL COMMENT 'lama hadir',
   `ket_prs` text COMMENT 'keterangan',
   PRIMARY KEY (`id_prs`),
-  KEY `FK_tb_presensi` (`id_pgw`),
-  CONSTRAINT `FK_tb_presensi` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_tb_presensi` (`no_akun_pgw`),
+  CONSTRAINT `FK_tb_presensi` FOREIGN KEY (`no_akun_pgw`) REFERENCES `tb_akun` (`no_akun_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_presensi` */
