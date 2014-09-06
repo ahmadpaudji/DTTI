@@ -1,0 +1,16 @@
+Catatan : 
+
+1. Reward dan punishment : otomatis (Parameter)
+2. Punishment 		 : SP (1-3) dan Pemotongan Gaji 
+3. Reward     		 : Poin, Berupa uang tunjangan dan gelar predikat karyawan teladan (Algoritma).
+4. SPPD                  : Siapa Saja , Kemana Saja, Waktu, Pengajuan Biaya 
+   Konfirmasi/Cetak : Personalia / Lampirkan Bukti SPPD (TTD) 
+5. Muhasabah aktifasi : Gak ada, langsung otomatis saja, (Hapus DB/ Skema, ERD).
+6. Cuti/ Libur -> Berkurang  (Ambigu). 
+8. Parameter KPI : Presensi dan Muhasabah ( Ubah Batasan Masalah) 
+9. Hitung Pelatihan (diluar KPI), tapi tetap dihitung sesuai pelatihan yang diambil= jml peserta/sdm * bobot 80% 
+10. Status Konfirmasi (database nambah) yang pengkonfirmasi bisa lebih dari 1. manjer , direksi. 
+  Yang cetak personalia
+11. NoAbsen = NoPeg (No pegawai) , No Akun (Generate dr system).
+12. Format NIK ? revisi 
+13. Perubahan tabel : pengguna, pegawai, komisaris (revisi / hapus) , pengguna field status aktif

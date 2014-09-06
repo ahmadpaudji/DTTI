@@ -96,22 +96,6 @@ CREATE TABLE `tb_detil_formal` (
 
 /*Data for the table `tb_detil_formal` */
 
-/*Table structure for table `tb_detil_ibadah` */
-
-DROP TABLE IF EXISTS `tb_detil_ibadah`;
-
-CREATE TABLE `tb_detil_ibadah` (
-  `id_dtl_ibd` int(20) NOT NULL AUTO_INCREMENT,
-  `id_ibd` int(20) NOT NULL,
-  `prd_awl` date NOT NULL COMMENT 'periode awal tgl',
-  `prd_akr` date NOT NULL COMMENT 'periode akhir tgl',
-  PRIMARY KEY (`id_dtl_ibd`),
-  KEY `FK_tb_detil_ibadah` (`id_ibd`),
-  CONSTRAINT `FK_tb_detil_ibadah` FOREIGN KEY (`id_ibd`) REFERENCES `tb_ibadah` (`id_ibd`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_detil_ibadah` */
-
 /*Table structure for table `tb_detil_informal` */
 
 DROP TABLE IF EXISTS `tb_detil_informal`;
@@ -131,23 +115,6 @@ CREATE TABLE `tb_detil_informal` (
 
 /*Data for the table `tb_detil_informal` */
 
-/*Table structure for table `tb_detil_jabatan` */
-
-DROP TABLE IF EXISTS `tb_detil_jabatan`;
-
-CREATE TABLE `tb_detil_jabatan` (
-  `id_dtl_jbt` int(20) NOT NULL AUTO_INCREMENT,
-  `id_jbtn` int(20) NOT NULL,
-  `id_divisi` int(20) NOT NULL,
-  PRIMARY KEY (`id_dtl_jbt`),
-  KEY `FK_tb_detil_jabatan` (`id_divisi`),
-  KEY `FK_tb_detil_jabatan2` (`id_jbtn`),
-  CONSTRAINT `FK_tb_detil_jabatan` FOREIGN KEY (`id_divisi`) REFERENCES `tb_divisi` (`id_divisi`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_tb_detil_jabatan2` FOREIGN KEY (`id_jbtn`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_detil_jabatan` */
-
 /*Table structure for table `tb_detil_pelatihan` */
 
 DROP TABLE IF EXISTS `tb_detil_pelatihan`;
@@ -165,20 +132,6 @@ CREATE TABLE `tb_detil_pelatihan` (
 
 /*Data for the table `tb_detil_pelatihan` */
 
-/*Table structure for table `tb_divisi` */
-
-DROP TABLE IF EXISTS `tb_divisi`;
-
-CREATE TABLE `tb_divisi` (
-  `id_divisi` int(20) NOT NULL AUTO_INCREMENT,
-  `nma_divisi` varchar(100) NOT NULL,
-  PRIMARY KEY (`id_divisi`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_divisi` */
-
-insert  into `tb_divisi`(`id_divisi`,`nma_divisi`) values (1,'Direksi'),(2,'Komisaris'),(3,'Sekretariat'),(4,'Operasional'),(5,'Program'),(6,'Marketing');
-
 /*Table structure for table `tb_formal` */
 
 DROP TABLE IF EXISTS `tb_formal`;
@@ -193,21 +146,6 @@ CREATE TABLE `tb_formal` (
 /*Data for the table `tb_formal` */
 
 insert  into `tb_formal`(`id_pnd_formal`,`skt_pnd_formal`,`nma_pnd_formal`) values (1,'TK','Taman Kanak'),(2,'SD','Sekolah Dasar'),(3,'SMP ','Sekolah Menengah Pertama'),(4,'SMA','Sekolah Menengah Atas'),(5,'SMK','Sekolah Menengah Kejuruan'),(6,'D1','Diploma 1'),(7,'D2','Diploma 2'),(8,'D3','Diploma 3'),(9,'S1','Sarjana'),(10,'S2','Master '),(11,'S3','Doktor ');
-
-/*Table structure for table `tb_ibadah` */
-
-DROP TABLE IF EXISTS `tb_ibadah`;
-
-CREATE TABLE `tb_ibadah` (
-  `id_ibd` int(11) NOT NULL AUTO_INCREMENT,
-  `jns_ibd` enum('tahajud','tadarus','shadaqoh','shaum sunat') NOT NULL,
-  `tgt_ibd` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_ibd`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_ibadah` */
-
-insert  into `tb_ibadah`(`id_ibd`,`jns_ibd`,`tgt_ibd`) values (1,'shadaqoh',30),(2,'shaum sunat',8),(3,'tadarus',30),(4,'tahajud',30);
 
 /*Table structure for table `tb_informal` */
 
@@ -249,14 +187,15 @@ CREATE TABLE `tb_izin_absen` (
 DROP TABLE IF EXISTS `tb_jabatan`;
 
 CREATE TABLE `tb_jabatan` (
-  `id_jbtn` int(20) NOT NULL AUTO_INCREMENT,
-  `nma_jbt` varchar(20) NOT NULL,
+  `id_jbtn` int(11) NOT NULL AUTO_INCREMENT,
+  `div_jbtn` enum('komisaris','direksi','operasional','marketing','program','sekretariat') NOT NULL,
+  `nma_jbtn` enum('komisaris utama','komisaris','kepala','direktur utama','direktur operasional','direktur marketing','manajer','staff administrasi','staff keuangan','staff event organizer','staff logistik','staff desain program','staff program alumni','staff sales executive','staff telemarketing','staff operasional marketing','staff customer relation','sv management event','sv logistik pengadaan','sv desain program','sv program alumni','sv ops marketing','sv marketing communication') NOT NULL,
   PRIMARY KEY (`id_jbtn`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_jabatan` */
 
-insert  into `tb_jabatan`(`id_jbtn`,`nma_jbt`) values (0,''),(1,'Direktur'),(3,'Kepala'),(4,'Staff Administartif'),(5,'Staff Keuangan'),(6,'Staff Event Organize'),(7,'Supervisor'),(8,'Manajer'),(9,'Staff Sales Excecuti'),(10,'Staff Telemarketing'),(11,'Staff Operasional Ma'),(12,'Staff Customer Servi');
+insert  into `tb_jabatan`(`id_jbtn`,`div_jbtn`,`nma_jbtn`) values (1,'komisaris','komisaris'),(2,'komisaris','komisaris utama'),(3,'sekretariat','kepala'),(4,'direksi','direktur marketing'),(5,'direksi','direktur operasional'),(6,'direksi','direktur utama'),(7,'marketing','manajer'),(8,'operasional','manajer'),(9,'program','manajer'),(10,'operasional','sv management event'),(11,'operasional','sv logistik pengadaan'),(12,'program','sv desain program'),(13,'program','sv program alumni'),(14,'marketing','sv ops marketing'),(15,'marketing','sv marketing communication'),(16,'sekretariat','staff keuangan'),(17,'sekretariat','staff administrasi'),(18,'marketing','staff telemarketing'),(19,'marketing','staff operasional marketing'),(20,'marketing','staff sales executive'),(21,'program','staff program alumni'),(22,'program','staff desain program'),(23,'operasional','staff logistik'),(24,'operasional','staff event organizer');
 
 /*Table structure for table `tb_kendaraan_motor` */
 
@@ -275,34 +214,20 @@ CREATE TABLE `tb_kendaraan_motor` (
 
 /*Data for the table `tb_kendaraan_motor` */
 
-/*Table structure for table `tb_komisaris` */
-
-DROP TABLE IF EXISTS `tb_komisaris`;
-
-CREATE TABLE `tb_komisaris` (
-  `id_komisaris` int(11) NOT NULL AUTO_INCREMENT,
-  `id_pgna` int(11) DEFAULT NULL,
-  `jns_komisaris` enum('komisaris','komisaris utama') DEFAULT NULL,
-  PRIMARY KEY (`id_komisaris`),
-  KEY `FK_tb_komisaris` (`id_pgna`),
-  CONSTRAINT `FK_tb_komisaris` FOREIGN KEY (`id_pgna`) REFERENCES `tb_pengguna` (`id_pgna`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_komisaris` */
-
 /*Table structure for table `tb_muhasabah` */
 
 DROP TABLE IF EXISTS `tb_muhasabah`;
 
 CREATE TABLE `tb_muhasabah` (
   `id_mhb` int(20) NOT NULL AUTO_INCREMENT,
-  `id_ibd` int(20) NOT NULL,
   `id_pgw` int(20) NOT NULL,
-  `tgl_ibd` date NOT NULL,
+  `tgl_mhb` date NOT NULL COMMENT 'tangggal muhasabah',
+  `alq_mhb` enum('Y','T') NOT NULL DEFAULT 'T' COMMENT 'baca quran',
+  `thj_mhb` enum('Y','T') NOT NULL DEFAULT 'T' COMMENT 'tahajud',
+  `sdq_mhb` enum('Y','T') NOT NULL DEFAULT 'T' COMMENT 'shadaqah',
+  `psa_mhb` enum('Y','T') NOT NULL DEFAULT 'T' COMMENT 'puasa sunat',
   PRIMARY KEY (`id_mhb`),
-  KEY `FK_tb_muhasabah` (`id_ibd`),
   KEY `FK_tb_muhasabah2` (`id_pgw`),
-  CONSTRAINT `FK_tb_muhasabah` FOREIGN KEY (`id_ibd`) REFERENCES `tb_detil_ibadah` (`id_ibd`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_tb_muhasabah2` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -315,18 +240,36 @@ DROP TABLE IF EXISTS `tb_pegawai`;
 CREATE TABLE `tb_pegawai` (
   `id_pgw` int(20) NOT NULL AUTO_INCREMENT,
   `id_pgna` int(20) DEFAULT NULL,
-  `id_dtl_jbt` int(100) DEFAULT NULL,
+  `id_jbtn` int(100) DEFAULT NULL,
   `nik_pgw` varchar(30) DEFAULT NULL,
   `no_peg_pgw` int(30) NOT NULL COMMENT 'nomor presensi',
   `no_akun_pgw` int(30) DEFAULT NULL COMMENT 'nomor akun presensi',
+  `no_ktp_pgw` varchar(40) DEFAULT NULL,
+  `npwp_pgw` varchar(30) DEFAULT NULL,
+  `nma_lkp_pgw` varchar(100) NOT NULL,
+  `email_pgw` varchar(50) NOT NULL,
+  `almt_pgw` text NOT NULL,
+  `jk_pgw` enum('L','P') NOT NULL,
+  `stat_pgw` enum('menikah','belum menikah') NOT NULL,
+  `lev_usr_pgw` enum('admin','user','special user') NOT NULL,
+  `uname_pgw` varchar(20) NOT NULL,
+  `pass_pgw` varchar(20) NOT NULL,
+  `photo_pgw` varchar(100) DEFAULT NULL,
+  `tmp_lhr_pgw` varchar(50) NOT NULL,
+  `tgl_lhr_pgw` date NOT NULL,
+  `hp_pgw` varchar(15) NOT NULL,
+  `telp_pgw` varchar(15) DEFAULT NULL,
+  `gol_drh_pgw` enum('A','B','O','AB') DEFAULT NULL,
+  `nma_psg_pgw` varchar(100) DEFAULT NULL,
+  `pc_ktp_pgw` varchar(100) DEFAULT NULL,
+  `stat_akt_pgw` enum('Y','T') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`id_pgw`),
   UNIQUE KEY `no_abs_pgw` (`no_peg_pgw`),
   UNIQUE KEY `no_abs_pgw_2` (`no_peg_pgw`),
   UNIQUE KEY `nik_pgw` (`nik_pgw`),
-  KEY `FK_tb_pegawai` (`id_dtl_jbt`),
   KEY `FK_tb_pegawai2` (`id_pgna`),
-  CONSTRAINT `FK_tb_pegawai2` FOREIGN KEY (`id_pgna`) REFERENCES `tb_pengguna` (`id_pgna`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `tb_pegawai_ibfk_1` FOREIGN KEY (`id_dtl_jbt`) REFERENCES `tb_detil_jabatan` (`id_dtl_jbt`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_tb_pegawai` (`id_jbtn`),
+  CONSTRAINT `FK_tb_pegawai` FOREIGN KEY (`id_jbtn`) REFERENCES `tb_jabatan` (`id_jbtn`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_pegawai` */
@@ -366,37 +309,6 @@ CREATE TABLE `tb_pengalaman_kerja` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_pengalaman_kerja` */
-
-/*Table structure for table `tb_pengguna` */
-
-DROP TABLE IF EXISTS `tb_pengguna`;
-
-CREATE TABLE `tb_pengguna` (
-  `id_pgna` int(20) NOT NULL AUTO_INCREMENT,
-  `no_ktp_agt` varchar(40) DEFAULT NULL,
-  `npwp_agt` varchar(30) DEFAULT NULL,
-  `nma_lkp_agt` varchar(100) NOT NULL,
-  `email_agt` varchar(50) NOT NULL,
-  `almt_agt` text NOT NULL,
-  `jk_agt` enum('L','P') NOT NULL,
-  `stat_agt` enum('menikah','belum menikah') NOT NULL,
-  `lev_usr_agt` enum('admin','user','special user') NOT NULL,
-  `uname_agt` varchar(20) NOT NULL,
-  `pass_agt` varchar(20) NOT NULL,
-  `photo_agt` varchar(100) DEFAULT NULL,
-  `tmp_lhr_agt` varchar(50) NOT NULL,
-  `tgl_lhr_agt` date NOT NULL,
-  `hp_agt` varchar(15) NOT NULL,
-  `telp_agt` varchar(15) DEFAULT NULL,
-  `gol_drh_agt` enum('A','B','O','AB') DEFAULT NULL,
-  `nma_psg_agt` varchar(100) DEFAULT NULL,
-  `pc_ktp_agt` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id_pgna`),
-  UNIQUE KEY `npwp_agt` (`npwp_agt`),
-  UNIQUE KEY `no_ktp_agt` (`no_ktp_agt`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-/*Data for the table `tb_pengguna` */
 
 /*Table structure for table `tb_presensi` */
 
