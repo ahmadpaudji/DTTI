@@ -1,9 +1,0 @@
-1. Pelatihan 
-2. Surat Tugas 
-3. Presensi
-4. Penggantian Libur 
-
-
-
-4. Izin ( Sesuai dengan tingkat jabatan -+ Dirut-> staf ( ijin ke terdekat), dirut-> sekre)  ada 4 
-5. Ubah konfirmasi izin absensi (revisi usecase)
