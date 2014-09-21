@@ -146,6 +146,24 @@ CREATE TABLE `tb_detil_pelatihan` (
 
 /*Data for the table `tb_detil_pelatihan` */
 
+/*Table structure for table `tb_detil_sppd` */
+
+DROP TABLE IF EXISTS `tb_detil_sppd`;
+
+CREATE TABLE `tb_detil_sppd` (
+  `id_dtl_sppd` int(11) NOT NULL AUTO_INCREMENT,
+  `id_sppd` int(11) NOT NULL,
+  `id_pgw` int(11) NOT NULL,
+  `status_dtl_sppd` enum('pengaju','sdm') NOT NULL DEFAULT 'sdm' COMMENT 'status pengaju atau sdm',
+  PRIMARY KEY (`id_dtl_sppd`),
+  KEY `FK_tb_detil_sppd` (`id_pgw`),
+  KEY `FK_tb_detil_sppd2` (`id_sppd`),
+  CONSTRAINT `FK_tb_detil_sppd` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tb_detil_sppd2` FOREIGN KEY (`id_sppd`) REFERENCES `tb_sppd` (`id_sppd`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_detil_sppd` */
+
 /*Table structure for table `tb_formal` */
 
 DROP TABLE IF EXISTS `tb_formal`;
@@ -184,14 +202,16 @@ CREATE TABLE `tb_izin_absen` (
   `id_pgw` int(11) NOT NULL,
   `tgl_pjn_abs` date NOT NULL COMMENT 'tangal pengajuan ijin presensi',
   `als_abs` text NOT NULL COMMENT 'alasan ',
-  `puk_awl_abs` time DEFAULT NULL COMMENT 'jam mulai ijin',
-  `puk_akr_abs` time DEFAULT NULL COMMENT 'jam akhir ijin',
-  `wkt_abs` date NOT NULL COMMENT 'waktu ijin ',
-  `ctn_abs` text NOT NULL COMMENT 'catatan',
+  `jns_abs` enum('cuti','ijin','sakit','libur') DEFAULT NULL COMMENT 'jam mulai ijin',
+  `wkt_abs_awl` time NOT NULL COMMENT 'jam akhir ijin',
+  `wkt_abs_akr` date NOT NULL COMMENT 'waktu ijin ',
   `stat_abs` enum('N','Y','T') NOT NULL DEFAULT 'N' COMMENT 'status konfirmasi absensi',
   `apprv_abs` varchar(100) DEFAULT NULL COMMENT 'yang approve absensi',
   `jbt_abs` varchar(50) DEFAULT NULL COMMENT 'jabatan approve absensi',
-  PRIMARY KEY (`id_abs`)
+  `bukti_abs` varchar(100) DEFAULT NULL COMMENT 'dokumen bukti',
+  PRIMARY KEY (`id_abs`),
+  KEY `FK_tb_izin_absen` (`id_pgw`),
+  CONSTRAINT `FK_tb_izin_absen` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_izin_absen` */
@@ -333,13 +353,30 @@ CREATE TABLE `tb_presensi` (
   `tlt_prs` time DEFAULT NULL COMMENT 'telat ',
   `stat_prs` enum('hadir','sakit','ijin','alpha','cuti','libur') NOT NULL COMMENT 'status presensi',
   `wkt_krj` time DEFAULT NULL COMMENT 'waktu kerja',
-  `bukti_prs` varchar(100) DEFAULT NULL COMMENT 'bukti presensi',
   PRIMARY KEY (`id_prs`),
   KEY `FK_tb_presensi` (`no_akun_pgw`),
   CONSTRAINT `FK_tb_presensi` FOREIGN KEY (`no_akun_pgw`) REFERENCES `tb_akun` (`no_akun_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_presensi` */
+
+/*Table structure for table `tb_punishment` */
+
+DROP TABLE IF EXISTS `tb_punishment`;
+
+CREATE TABLE `tb_punishment` (
+  `id_pun` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pgw` int(11) NOT NULL,
+  `tgl_pun` date DEFAULT NULL COMMENT 'tanggal pengajuan',
+  `jns_pun` enum('SP1','SP2','SP3') NOT NULL COMMENT 'jenis',
+  `surat_pun` varchar(30) NOT NULL COMMENT 'surat lampiran',
+  `ket_pun` varchar(100) DEFAULT NULL COMMENT 'keterangan',
+  PRIMARY KEY (`id_pun`),
+  KEY `FK_tb_punishment` (`id_pgw`),
+  CONSTRAINT `FK_tb_punishment` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_punishment` */
 
 /*Table structure for table `tb_rek_bank` */
 
@@ -375,6 +412,30 @@ CREATE TABLE `tb_sim` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_sim` */
+
+/*Table structure for table `tb_sppd` */
+
+DROP TABLE IF EXISTS `tb_sppd`;
+
+CREATE TABLE `tb_sppd` (
+  `id_sppd` int(11) NOT NULL AUTO_INCREMENT,
+  `tgl_pju_sppd` date NOT NULL COMMENT 'tanggal pengajuan',
+  `tgl_plk_sppd` date NOT NULL COMMENT 'tanggal pelaksanaan sppsd',
+  `nma_kga_sppd` varchar(100) NOT NULL COMMENT 'nama tamu yg dikunjungi',
+  `posisi_kga_sppd` varchar(50) DEFAULT NULL COMMENT 'posisi atau jabatan tamu',
+  `jns_tmp_sppd` enum('perusahaan','instansi','organisasi','lembaga','sekolah','kampus') NOT NULL COMMENT 'jenis tempat dituju',
+  `nma_tmp_sppd` varchar(50) NOT NULL COMMENT 'nama tempat ',
+  `bdg_phn_sppd` varchar(50) DEFAULT NULL COMMENT 'bidang perusahaan / instansi',
+  `tlp_kga_sppd` varchar(15) NOT NULL COMMENT 'telpon tamu',
+  `agenda_sppd` text NOT NULL,
+  `apprv_sppd` enum('N','Y','T') DEFAULT NULL COMMENT 'status dikonfirmasi',
+  `tgl_apprv_sppd` date DEFAULT NULL COMMENT 'tanggal dikonfirmasi ',
+  `nma_apprv_sppd` varchar(100) DEFAULT NULL COMMENT 'nama yang konfirmasi',
+  `jbtn_apprv_sppd` varchar(100) DEFAULT NULL COMMENT 'jabatan yang konfirmasi',
+  PRIMARY KEY (`id_sppd`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_sppd` */
 
 /*Table structure for table `tb_usaha_aktifitas` */
 
