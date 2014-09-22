@@ -6,8 +6,8 @@
 <canvas zoom="75">
 <tables>
 <table name="tb_pegawai" view="colnames">
-<left>736</left>
-<top>17</top>
+<left>752</left>
+<top>19</top>
 <width>135</width>
 <height>350</height>
 <sql_create_table>CREATE TABLE `tb_pegawai` (
@@ -132,7 +132,7 @@
 <table name="tb_kendaraan_motor" view="colnames">
 <left>1276</left>
 <top>169</top>
-<width>98</width>
+<width>117</width>
 <height>115</height>
 <sql_create_table>CREATE TABLE `tb_kendaraan_motor` (
   `id_kdr_mtr` int(20) NOT NULL AUTO_INCREMENT,
@@ -147,7 +147,7 @@
 </table>
 <table name="tb_anak" view="colnames">
 <left>1438</left>
-<top>129</top>
+<top>123</top>
 <width>101</width>
 <height>135</height>
 <sql_create_table>CREATE TABLE `tb_anak` (
@@ -166,7 +166,7 @@
 <table name="tb_usaha_aktifitas" view="colnames">
 <left>1271</left>
 <top>374</top>
-<width>114</width>
+<width>124</width>
 <height>102</height>
 <sql_create_table>CREATE TABLE `tb_usaha_aktifitas` (
   `id_ush_akt` int(20) NOT NULL AUTO_INCREMENT,
@@ -195,8 +195,8 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="tb_cuti" view="colnames">
-<left>466</left>
-<top>452</top>
+<left>488</left>
+<top>455</top>
 <width>101</width>
 <height>233</height>
 <sql_create_table>CREATE TABLE `tb_cuti` (
@@ -223,8 +223,8 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="tb_pelatihan" view="colnames">
-<left>1254</left>
-<top>514</top>
+<left>1266</left>
+<top>516</top>
 <width>131</width>
 <height>173</height>
 <sql_create_table>CREATE TABLE `tb_pelatihan` (
@@ -241,9 +241,9 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="tb_detil_informal" view="colnames">
-<left>492</left>
-<top>272</top>
-<width>110</width>
+<left>466</left>
+<top>267</top>
+<width>156</width>
 <height>122</height>
 <sql_create_table>CREATE TABLE `tb_detil_informal` (
   `id_dtl_informal` int(20) NOT NULL AUTO_INCREMENT,
@@ -293,8 +293,8 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="tb_jabatan" view="colnames">
-<left>603</left>
-<top>456</top>
+<left>620</left>
+<top>466</top>
 <width>115</width>
 <height>100</height>
 <sql_create_table>CREATE TABLE `tb_jabatan` (
@@ -318,8 +318,8 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="tb_presensi" view="colnames">
-<left>1143</left>
-<top>666</top>
+<left>1142</left>
+<top>686</top>
 <width>110</width>
 <height>199</height>
 <sql_create_table>CREATE TABLE `tb_presensi` (
