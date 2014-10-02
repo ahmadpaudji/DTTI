@@ -396,6 +396,22 @@ CREATE TABLE `tb_rek_bank` (
 
 /*Data for the table `tb_rek_bank` */
 
+/*Table structure for table `tb_reward` */
+
+DROP TABLE IF EXISTS `tb_reward`;
+
+CREATE TABLE `tb_reward` (
+  `id_reward` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pgw` int(11) NOT NULL,
+  `jns_reward` enum('teladan','khusus','n/a') NOT NULL DEFAULT 'n/a',
+  `ket_reward` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_reward`),
+  KEY `FK_tb_reward` (`id_pgw`),
+  CONSTRAINT `FK_tb_reward` FOREIGN KEY (`id_pgw`) REFERENCES `tb_pegawai` (`id_pgw`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_reward` */
+
 /*Table structure for table `tb_sim` */
 
 DROP TABLE IF EXISTS `tb_sim`;
