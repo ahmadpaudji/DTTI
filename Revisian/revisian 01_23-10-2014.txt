@@ -1,0 +1,58 @@
+##-- REVISI PASCA PELATIHAN --##
+#1. REVISI BESAR 
+ - Halaman Special User (Direksi) -> Monitoring dan Kontroling terhadap 
+   masing-masing divisi nya saja, kecuali DIREKTUR UTAMA, KOMISARIS, dan ADMIN bisa memonitor 
+   seluruh divisi.
+ - Pengesahan seluruh pengajuan dari manajer operasional dan manajer marketing 
+   dilakukan oleh Direkturnya masing-masing per divisi.
+  
+ -[gak ngerti bagian ini, soalnya pakai bahasa HANDOYO]
+ * didalam menambahkan waktu libur, cek tanggal libur yang ditambahkan. 
+ * apabila hari libur yang ditambahkan memiliki hari yang sudah dilewati.
+ * cek semua data di tabel presensi pada tahun/bulan yang sama.
+ * apabila terdapat pegawai yang absen-nya alpha ubah menjadi liburr.
+
+  
+
+#2. REVISI KECIL 
+ - Perubahan tulisan KPI(index) -> Indicator 
+ - Validasi tanggal PENGAJUAN IZIN,SPPD,PELATIHAN MIN. H-1, Jika pengajuan hari H maka langsung 
+   ada notifikasi TIDAK BISA, harap set H-1.
+ - Validasi pada saat upload presensi 
+ - Dashboard -> Pegawai Teladan hanya 1 saja per periode setelah didapatkan data kedisiplinan presensi & muhasanah 
+ - Kirim Password dan Username ketika ada perubahan pada password atau unamae yang ada pada halaman admin  
+ - Notifikasi di kendaraan bermotor.
+ - Data Data Bank Pegawai diurut berdasarkan yang sering dipakai saja. 
+
+  #BUG
+- Dashboard -> Perhitungan Muhasabah Tabular dan Grafik (muhasabah dihitung per bulan, bukan per periode) 
+
+Deadline : 26 - Oktober - 2014 ; Jam 16:00 WIB
+---------------------------------------------------------------------------------------------------------
+
+#FITUR BELUM TERSELESAIKAN 
+
+- Penambahan menu rekapitulasi Pengajuan (admin, user, special user) 
+- Rekapitulasi pelatihan dihitung per perusahaan saja, dimana dihutung per bulan dan akumulasi per tahun. 
+- Cetak data 
+- Pemilihan 1 pegawai teladan hasil generete per bulan. 
+- Perhitungan akumulasi sisa cuti hal admin dan user.
+- Perhitungan  rekap reward dan punishmet hal admin, user, dan special user. 
+- Backup database
+
+
+#MODUL BELUM TERSELESAIKAN 
+
+- SPPD (download data dari user), dan unggah cetak laporan di halaman admin.
+- KPI -> (per divisi, per pegawai, dan akumulasi keseluruhan) per periode dan per tahun.  
+  Catatan : 
+            - KPI di generate per tahun dan per bulan sebgagai rincian data.
+            - Tingkat kedisiplinan kehadiran (per periode) + (data target) 
+            - Tingkat muhasabah (per bulan) + (data target)
+            - Tingkat pelatihan SDM (per bulan) + (data target)
+            - dua jenis per bulan % dan per tahun % 
+ - Generate KPI, pegawai teladan, reward, dan punishmet ketika selesai unggah presensi.
+ - Generete Perhitungan dan Pengisian muhasabah dilakukan di awal bulan, bukan per periode, karena per periode 
+   hanya presensi saja.  
+
+Deadline : 29 - Oktober - 2014 ; Jam 16:00 WIB

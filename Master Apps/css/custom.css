@@ -1,0 +1,18 @@
+body.login{
+	background-color : white !important;
+}
+
+.login .content{
+	border: #458FFF solid 1px;
+	-webkit-border-radius: 7px !important;
+     -moz-border-radius: 7px !important;
+          border-radius: 7px !important;
+}
+
+#navigation #brand {
+	padding-right: 5px;
+}
+
+.ui-resizable-handle.ui-resizable-e {
+cursor: auto;
+}
