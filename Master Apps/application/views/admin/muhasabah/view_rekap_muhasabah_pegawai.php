@@ -60,15 +60,42 @@
 				<?php
 					if ($tampil == "true")
 						{
+							if ($pegawai != '')
+							{
+								$this->session->set_flashdata("pegawai",$pegawai);
+							}
+
+							if ($tgl_awl != '')
+							{
+								$this->session->set_flashdata("tgl_awl",$tgl_awl);
+							}
+
+							if ($tgl_akh != '')
+							{
+								$this->session->set_flashdata("tgl_akh",$tgl_akh);
+							}
 				?>
 				<div class="row-fluid">
 					<div class="span12">
+					<?php
+					if ($this->session->userdata("hak") == "admin")
+					{
+						?>
+						<div>
+							<a href="<?php echo base_url("admin/muhasabah/cetak");?>">
+								<button type="submit" class="btn btn-primary">CETAK</button>
+							</a>
+						</div>
+					<?php
+					}
+					?>
 						<div class="box box-color box-bordered">
 							<div class="box-title">
 								<h3>
 									<i class="icon-table"></i>
 									Data Muhasabah
 								</h3>
+								
 							</div>
 							<div class="box-content nopadding">
 								<table class="table table-hover table-nomargin dataTable table-bordered">

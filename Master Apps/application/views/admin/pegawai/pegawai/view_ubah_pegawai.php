@@ -105,17 +105,17 @@
 											}
 										?>
 											<label class='radio'>
-												<input type="radio" name="status" value="menikah" checked> Menikah
+												<input type="radio" name="status" value="menikah" class="status" <?php echo $mnk;?>> Menikah
 											</label>
 											<label class='radio'>
-												<input type="radio" name="status" value="belum menikah"> Belum Menikah
+												<input type="radio" name="status" value="belum menikah" class="status" <?php echo $blm; ?>> Belum Menikah
 											</label>
 										</div>
 									</div>
-									<div class="control-group">
+									<div class="control-group" id="pasangan2">
 										<label for="textfield" class="control-label">Pasangan</label>
 										<div class="controls">
-											<input type="text" name="pasangan" id="pasangan" placeholder="Contoh : Pasangan" value="<?php echo $pegawai->nma_psg_pgw; ?>" class="input-xlarge">
+											<input type="text" name="pasangan" placeholder="Contoh : Pasangan" value="<?php echo $pegawai->nma_psg_pgw; ?>" class="input-xlarge">
 										</div>
 									</div>
 									<div class="control-group">
@@ -152,6 +152,10 @@
 											</select>
 										</div>
 									</div>
+									<?php
+									if ($this->session->userdata("hak") == "admin")
+									{
+									?>
 									<div class="control-group">
 										<label for="textfield" class="control-label">Jabatan</label>
 										<div class="controls">
@@ -176,6 +180,9 @@
 											</select>
 										</div>
 									</div>
+									<?php
+									}
+									?>
 									<div class="control-group">
 										<label for="textfield" class="control-label">NIK</label>
 										<div class="controls">
@@ -189,7 +196,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">No. KTP</label>
+										<label for="textfield" class="control-label">KTP</label>
 										<div class="controls">
 											<input type="text" name="no_ktp" id="no_ktp" placeholder="Contoh : 341241257212" value="<?php echo $pegawai->no_ktp_pgw; ?>" class="input-xlarge" data-rule-required="true" data-rule-digits="true" data-rule-minlength="16" data-rule-maxlength="16">
 										</div>
@@ -207,47 +214,19 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">Level User</label>
-										<div class="controls">
-											<select name="level" id="level" class='input-large'>
-											<?php
-												$a = '';
-												$su = '';
-												$u = '';
-
-												if ($pegawai->lev_usr_pgw == "admin")
-												{
-													$a = "selected";
-												}
-												else if ($pegawai->lev_usr_pgw == "super user")
-												{
-													$su = "selected";
-												}
-												else if ($pegawai->lev_usr_pgw == "user")
-												{
-													$u = "selected";
-												}
-											?>
-												<option value="admin" <?php echo $a; ?>>ADMINISTRATOR</option>
-												<option value="super user" <?php echo $su; ?>>SPECIAL USER</option>
-												<option value="user" <?php echo $u; ?>>USER</option>
-											</select>
-										</div>
-									</div>
-									<div class="control-group">
-										<label for="textfield" class="control-label">No. Handphone</label>
+										<label for="textfield" class="control-label">Hp</label>
 										<div class="controls">
 											<input type="text" name="no_hp" id="no_hp" placeholder="Contoh : 081923482576" value="<?php echo $pegawai->hp_pgw; ?>" class="input-xlarge" data-rule-required="true" data-rule-digits="true" data-rule-minlength="10" data-rule-maxlength="12">
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">No. Telepon</label>
+										<label for="textfield" class="control-label">Telepon</label>
 										<div class="controls">
 											<input type="text" name="no_tlp" id="no_tlp" placeholder="Contoh : 204555" value="<?php echo $pegawai->telp_pgw; ?>" class="input-xlarge" data-rule-digits="true" data-rule-minlength="6" data-rule-maxlength="12">
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">Photo Kopi KTP</label>
+										<label for="textfield" class="control-label">Foto Kopi KTP</label>
 										<?php
 											if ($pegawai->pc_ktp_pgw != null)
 											{
@@ -273,6 +252,26 @@
 		</div>
 
 	</div> <?php //akhir div container content ?>
+		<script>
+
+		$(function(){
+
+			$('.status').on('click',function(){
+
+				if($(this).val() == 'belum menikah'){
+					$('#pasangan2').hide();
+					$('#pasangan').val('');
+				}
+
+				if($(this).val() == 'menikah'){
+					$('#pasangan2').show();
+					$('#pasangan').val('');
+				}
+			});
+
+		});
+
+	</script>
 	</body>
 
 	</html>

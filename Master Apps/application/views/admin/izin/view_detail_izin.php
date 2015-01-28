@@ -7,7 +7,7 @@
 							if ($this->session->userdata['hak'] == "admin")
 							{
 						?>
-							<a href='#' class='btn btn-primary'>Cetak</a>
+							<a href='<?php echo base_url(); ?>admin/izin/cetakIzin/<?php echo $izin->id_abs;?>' class='btn btn-primary'>Cetak</a>
 						<?php
 							}
 						?>

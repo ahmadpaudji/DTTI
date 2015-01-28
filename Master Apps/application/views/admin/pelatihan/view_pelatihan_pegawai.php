@@ -44,6 +44,17 @@
 					<?php
 						}
 					?>
+						<?php
+						if ($this->session->flashdata("notif"))
+						{
+						?>
+						<div class="alert alert-<?php echo $this->session->flashdata('alert');?>">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							<?php echo $this->session->flashdata('notif');?>
+						</div>
+						<?php
+							}
+						?>
 						<div class="box">
 							<div class="box-title">
 								<h3><i class="icon-edit"></i>Data Pelatihan</h3>
@@ -83,6 +94,16 @@
 				?>
 				<div class="row-fluid">
 					<div class="span12">
+						<?php
+						if ($this->session->userdata("hak") == "admin")
+						{
+						?>
+							<div>
+								<a href="<?php echo base_url("admin/pelatihan/rekap");?>" style="margin-left:2px" class="btn btn-primary"><i class="icon-credit-card"></i>&nbsp;REKAPITULASI</a>	
+							</div>
+						<?php
+						}
+						?>
 						<div class="box box-color box-bordered">
 							<div class="box-title">
 								<h3>
@@ -150,18 +171,7 @@
 												<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="icon-cogs"></i> <span class="caret"></span></a>
 												<ul class="dropdown-menu">
 												<?php
-												if ($this->session->userdata['hak'] == "admin" && $peng->stat_lth == 'N')
-												{
-												?>
-													<li>
-														<a href="<?php echo base_url(); ?>admin/pelatihan/setuju/<?php echo $peng->id_lth.'/Y'; ?>">Setujui</a>
-													</li>
-													<li>
-														<a href="<?php echo base_url(); ?>admin/pelatihan/setuju/<?php echo $peng->id_lth.'/T'; ?>">Tolak</a>
-													</li>
-												<?php
-												}
-												else if ($this->session->userdata['hak'] == "user" && $peng->stat_lth == 'N')
+												if ($this->session->userdata['hak'] != "admin" && $peng->stat_lth == 'N')
 												{
 												?>
 													<li>
@@ -169,19 +179,11 @@
 													</li>
 												<?php
 												}
-												else if ($this->session->userdata['hak'] == "user" || $this->session->userdata['hak'] == "admin" && $peng->stat_lth == 'T')
+												else if ($this->session->userdata['hak'] == "admin" || $peng->stat_lth == 'Y' || $peng->stat_lth == 'T')
 												{
 												?>
 													<li>
 														<a>Tidak ada</a>
-													</li>
-												<?php
-												}
-												else if ($this->session->userdata['hak'] == "admin" && $peng->stat_lth == 'Y')
-												{
-												?>
-													<li>
-														<a href="#">Cetak</a>
 													</li>
 												<?php
 												}

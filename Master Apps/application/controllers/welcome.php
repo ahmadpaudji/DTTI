@@ -19,7 +19,7 @@ class Welcome extends Admin_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view();
+		$this->load->view("welcome_message");
 	}
 }
 

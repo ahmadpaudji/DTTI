@@ -24,7 +24,7 @@ function __autoload($classname)
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/dtti/';
+$config['base_url']	= 'http://dti.ozan-soft.com/';
 
 /*
 |--------------------------------------------------------------------------

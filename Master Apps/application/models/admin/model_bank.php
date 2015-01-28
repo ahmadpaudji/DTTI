@@ -32,6 +32,10 @@ class Model_bank extends Model_tambahan
     //DROPDOWN
     function bank()
     {
+        $this->db->select("tb_bank.id_bank as id_bank, sktn_bank, nma_bank , COUNT(id_pgw) AS 'jumlah'");
+        $this->db->join('tb_rek_bank','tb_rek_bank.id_bank = tb_bank.id_bank');
+        $this->db->group_by('id_bank');
+        $this->db->order_by('jumlah',"desc");
         return $this->db->get('tb_bank')->result();
     }
     //AKHIR DROPDOWN

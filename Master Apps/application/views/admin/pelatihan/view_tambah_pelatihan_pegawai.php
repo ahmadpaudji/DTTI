@@ -26,7 +26,7 @@
 								<form action="<?php echo base_url() ; ?>admin/pelatihan/aksi_tambah" method="POST" class='form-horizontal form-validate' id="bb">
 									
 									<div class="control-group">
-										<label for="textfield" class="control-label">Nama</label>
+										<label for="textfield" class="control-label">Nama Pelatihan</label>
 										<div class="controls">
 											<input type="text" name="nama" id="nama" placeholder="Contoh : Pelatihan Sesuatu" class="input-xlarge" data-rule-required="true" data-rule-minlength="5" data-rule-maxlength="99">
 										</div>
@@ -44,7 +44,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">Tempat</label>
+										<label for="textfield" class="control-label">Alamat</label>
 										<div class="controls">
 											<input type="text" name="tempat" id="tempat" placeholder="Contoh : Bandung" class="input-xlarge" data-rule-required="true" data-rule-minlength="4" data-rule-maxlength="99">
 										</div>
@@ -66,7 +66,7 @@
 									</div>
 									<div class="form-actions">
 										<button type="submit" class="btn btn-primary">Simpan</button>
-										<a href="<?php echo base_url(); ?>admin/pegawai" class="btn">Batal</a>
+										<a href="<?php echo base_url(); ?>admin/pelatihan" class="btn">Batal</a>
 									</div>
 								</form>
 							</div>

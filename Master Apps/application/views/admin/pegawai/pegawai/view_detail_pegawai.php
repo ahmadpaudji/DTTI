@@ -7,7 +7,7 @@
 							if ($this->session->userdata['hak'] == "admin")
 							{
 						?>
-							<a href='<?php echo base_url();?>admin/pegawai/cetak/<?php echo $pegawai->id_pgw;?>' class='btn btn-primary'>Cetak</a>
+							<a href='<?php echo base_url();?>admin/pegawai/cetak/<?php echo $pegawai->id_pgw;?>' class='btn btn-primary'>CETAK</a>
 						<?php
 							}
 						?>
@@ -112,7 +112,14 @@
 										<label class="control-label">Pasangan</label>
 										<div class="controls">
 											<?php
-												echo $pegawai->nma_psg_pgw;
+												if ($pegawai->nma_psg_pgw != '')
+												{
+													echo $pegawai->nma_psg_pgw;
+												}
+												else
+												{
+													echo '-';
+												}
 											?>
 										</div>
 									</div>
@@ -160,7 +167,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label class="control-label">No. KTP</label>
+										<label class="control-label">KTP</label>
 										<div class="controls">
 											<?php
 												echo $pegawai->no_ktp_pgw;
@@ -192,7 +199,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label class="control-label">No. Handphone</label>
+										<label class="control-label">Hp</label>
 										<div class="controls">
 											<?php
 												echo $pegawai->hp_pgw;
@@ -200,7 +207,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label class="control-label">No. Telepon</label>
+										<label class="control-label">Telepon</label>
 										<div class="controls">
 											<?php
 												echo $pegawai->telp_pgw;
@@ -208,7 +215,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label class="control-label">Foto copy KTP</label>
+										<label class="control-label">Foto Kopi KTP</label>
 										<div class="controls">
 											<?php
 												if (is_null($pegawai->pc_ktp_pgw))

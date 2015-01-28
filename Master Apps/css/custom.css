@@ -16,3 +16,24 @@ body.login{
 .ui-resizable-handle.ui-resizable-e {
 cursor: auto;
 }
+
+.table tr th, .table tr td {
+padding: 10px;
+border-top: 1px dotted #ddd;
+text-transform: uppercase;
+}
+
+img.pasfoto {
+height: 150px;
+max-width: 130px;
+vertical-align: middle;
+border: 0;
+-ms-interpolation-mode: bicubic;
+}
+
+body {
+text-transform: uppercase;
+background: #fff;
+font-family: "Open Sans",sans-serif;
+font-size: 13px !important;
+}

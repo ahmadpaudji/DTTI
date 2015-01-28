@@ -121,7 +121,7 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">No. KTP</label>
+										<label for="textfield" class="control-label">KTP</label>
 										<div class="controls">
 											<input type="text" name="no_ktp" id="no_ktp" placeholder="Contoh : 341241257212" class="input-xlarge" data-rule-required="true" data-rule-digits="true" data-rule-minlength="16" data-rule-maxlength="16">
 										</div>
@@ -139,29 +139,19 @@
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">Level User</label>
-										<div class="controls">
-											<select name="level" id="level" class='input-large'>
-												<option value="admin">ADMINISTRATOR</option>
-												<option value="super user">SPECIAL USER</option>
-												<option value="user">USER</option>
-											</select>
-										</div>
-									</div>
-									<div class="control-group">
-										<label for="textfield" class="control-label">No. Handphone</label>
+										<label for="textfield" class="control-label">Hp</label>
 										<div class="controls">
 											<input type="text" name="no_hp" id="no_hp" placeholder="Contoh : 081923482576" class="input-xlarge" data-rule-required="true" data-rule-digits="true" data-rule-minlength="10" data-rule-maxlength="12">
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">No. Telepon</label>
+										<label for="textfield" class="control-label">Telepon</label>
 										<div class="controls">
 											<input type="text" name="no_tlp" id="no_tlp" placeholder="Contoh : 204555" class="input-xlarge" data-rule-digits="true" data-rule-minlength="6" data-rule-maxlength="12">
 										</div>
 									</div>
 									<div class="control-group">
-										<label for="textfield" class="control-label">Photo Kopi KTP</label>
+										<label for="textfield" class="control-label">Foto Kopi KTP</label>
 										<div class="controls">
 											<input class="file" type="file" accept="image/*" name="userfile" /><br/>
 										</div>

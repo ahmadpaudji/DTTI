@@ -45,7 +45,16 @@ class Muhasabah extends Admin_Controller
 			$data['bulan'] = date('m');
 			$data['tahun'] = date('Y');
 			$data['nama_bulan'] = $nama_bulan[(int)$bln];
-			$data['nama_bulan_s'] = $nama_bulan[$bln-1];
+
+			if ($bln == 1)
+			{
+				$data['nama_bulan_s'] = $nama_bulan[12];
+			}
+			else
+			{
+				$data['nama_bulan_s'] = $nama_bulan[$bln-1];
+			}
+			
 			$data['date_now'] = $now;
 			$aktif['nav'] = "muhasabah";
 			$aktif['notif'] = $this->model_muhasabah->notif();
@@ -122,6 +131,33 @@ class Muhasabah extends Admin_Controller
 
 		if ($cari == "cari")
 		{
+			if ($this->input->post('pegawai') != '')
+			{
+				$data['pegawai'] = $this->input->post('pegawai');
+			}
+			else
+			{
+				$data['pegawai'] = '';	
+			}
+
+			if ($this->input->post('tanggal_awal') != '')
+			{
+				$data['tgl_awl'] = $this->input->post('tanggal_awal');
+			}
+			else
+			{
+				$data['tgl_awl'] = '';	
+			}
+
+			if ($this->input->post('tanggal_akhir') != '')
+			{
+				$data['tgl_akh'] = $this->input->post('tanggal_akhir');
+			}
+			else
+			{
+				$data['tgl_akh'] = '';	
+			}
+			
 			$data['muhasabah'] = $this->model_muhasabah->rekap();
 			$data['tampil'] = "true";
 		}
@@ -137,7 +173,6 @@ class Muhasabah extends Admin_Controller
 
 	public function persentase($cari = null)
 	{
-		
 		$aktif['nav'] = "muhasabah";
 		$aktif['notif'] = $this->model_muhasabah->notif();
 		$data['pegawai'] = $this->model_muhasabah->pegawai();
@@ -147,7 +182,42 @@ class Muhasabah extends Admin_Controller
 		$this->load->view('admin/view_head');
 		$this->load->view('admin/view_navigation',$aktif);
 		$this->load->view('admin/view_left');
-		$this->load->view('admin/muhasabah/view_persentase_muhasabah_pegawai',$data);
+		$this->load->view('admin/muhasabah/view_persentase_muhasabah_pegawai',$data);	
+	}
+
+	public function cetak()
+	{
+		if ($this->session->flashdata("tgl_awl") != '')
+        {
+			$data['tgl_awl'] = $this->session->flashdata('tgl_awl');
+		}
+		else
+		{
+			$data['tgl_awl'] = '';
+		}
+
+		if ($this->session->flashdata("tgl_akh") != '')
+        {
+			$data['tgl_akh'] = $this->session->flashdata('tgl_akh');
+		}
+		else
+		{
+			$data['tgl_akh'] = '';
+		}
+
+		$data['muhasabah'] = $this->model_muhasabah->cetak();
+		$data['direktur'] = $this->model_muhasabah->get_direktur();
 		
+		$html = $this->load->view('pdf/cetak_rekapmuhasabah',$data,true);
+		// Get output html
+		// Load library
+		$this->load->library('dompdf_gen');
+		
+		// Convert to PDF
+		$this->dompdf->load_html($html);
+		$this->dompdf->render();
+		$this->dompdf->stream("Rekap_Muhasabah.pdf");
+
+		//redirect('admin/pegawai/detail/'.$id_pgw);
 	}
 }

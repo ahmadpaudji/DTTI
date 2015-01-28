@@ -9,7 +9,7 @@ class Model_beranda extends Model_tambahan
         $bln_ini = date('m');
         $thn_ini = date('Y');
         
-        if ($this->session->userdata("hak") == 'admin')
+        if ($this->session->userdata("hak") == 'admin' || $this->session->userdata("hak") == "super user")
         {
             //Presensi
             $alpha_b = $this->db->get_where("tb_presensi",array('stat_prs' => 'alpha', 'MONTH(tgl_prs)' => $bln_ini))->result();
@@ -32,19 +32,6 @@ class Model_beranda extends Model_tambahan
 
             $telat_b = $this->db->get_where("tb_presensi",array('tlt_prs >' => '00:00:00', 'MONTH(tgl_prs)' => $bln_ini))->result();
             $telat_t = $this->db->get_where("tb_presensi",array('tlt_prs >' => '00:00:00', 'YEAR(tgl_prs)' => $thn_ini))->result();
-
-            //pelatihan
-            $setuju_h = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'Y', 'tgl_pjn_lth' => $hari_ini))->result();
-            $setuju_b = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'Y', 'MONTH(tgl_pjn_lth)' => $bln_ini))->result();
-            $setuju_t = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'Y', 'YEAR(tgl_pjn_lth)' => $thn_ini))->result();
-
-            $tolak_h = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'T', 'tgl_pjn_lth' => $hari_ini))->result();
-            $tolak_b = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'T', 'MONTH(tgl_pjn_lth)' => $bln_ini))->result();
-            $tolak_t = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'T', 'YEAR(tgl_pjn_lth)' => $thn_ini))->result();
-
-            $blm_h = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'N', 'tgl_pjn_lth' => $hari_ini))->result();
-            $blm_b = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'N', 'MONTH(tgl_pjn_lth)' => $bln_ini))->result();
-            $blm_t = $this->db->get_where("tb_pelatihan",array('stat_lth' => 'N', 'YEAR(tgl_pjn_lth)' => $thn_ini))->result();
 
             $this->db->select("no_akun_pgw,tb_akun.id_pgw,nma_lkp_pgw");
             $this->db->from("tb_akun");
@@ -127,20 +114,484 @@ class Model_beranda extends Model_tambahan
         $data->telat_b = count($telat_b);
         $data->telat_t = count($telat_t);
 
-        if ($this->session->userdata("hak") == 'admin')
+//Muhasabah periode
+
+        $tgl = date("d");
+        $bln = date("m");
+        $thn = date("Y");
+
+        if ($tgl >= 21 && $bln != 12)
         {
-            $data->setuju_h = count($setuju_h);
-            $data->setuju_b = count($setuju_b);
-            $data->setuju_t = count($setuju_t);
-            $data->tolak_h = count($tolak_h);
-            $data->tolak_b = count($tolak_b);
-            $data->tolak_t = count($tolak_t);
-            $data->blm_h = count($blm_h);
-            $data->blm_b = count($blm_b);
-            $data->blm_t = count($blm_t);
-            $data->pegawai = $pegawai;
+            $tanggal_awal = $thn.'-'.$bln.'-21';
+            $tanggal_akhir = $thn.'-'.($bln+1).'-20';
+        }
+        else if ($tgl < 21 && $bln != 1)
+        {
+            $tanggal_awal = $thn.'-'.($bln-1).'-21';
+            $tanggal_akhir = $thn.'-'.$bln.'-20';
+        }
+        else if ($tgl >= 21 && $bln == 12)
+        {
+            $tanggal_awal = $thn.'-'.$bln.'-21';
+            $tanggal_akhir = ($thn+1).'-1-20';
+        }
+        else if ($tgl < 21 && $bln == 1)
+        {
+            $tanggal_awal = ($thn-1).'-12-21';
+            $tanggal_akhir = $thn.'-'.$bln.'-20';
         }
 
+        if ($this->session->userdata('hak') == "user")
+        {
+            $pegawai = $this->db->select('nma_lkp_pgw,id_pgw')->where('id_pgw',$this->session->userdata('id_pgw'))->get('tb_pegawai')->result_array();
+        }
+        else
+        {
+            $pegawai = $this->db->select('nma_lkp_pgw,id_pgw')->get('tb_pegawai')->result_array();
+        }
+
+        $total_pgw = count($pegawai);
+        $i = 0;
+        $muhasabah = array('thj_mhb','sdq_mhb','psa_mhb','alq_mhb');
+        foreach ($pegawai as $k)
+        {
+            foreach($muhasabah as $m)
+            {
+                $this->db->where("tgl_mhb >=",$tanggal_awal);
+                $this->db->where("tgl_mhb <=",$tanggal_akhir);
+                $this->db->where('id_pgw', $k['id_pgw']);
+                $this->db->where($m, "Y");
+                $jml = count($this->db->get('tb_muhasabah')->result_array());
+                $hasil = 0;
+                $persen = 0.25;
+
+                if ($m == "psa_mhb")
+                {
+                    if ($jml > 8)
+                    {
+                        $hasil = (8/8)*$persen;
+                    }
+                    else
+                    {
+                        $hasil = ($jml/8)*$persen;
+                    }
+                }
+                else
+                {
+                    if ($jml > 30)
+                    {
+                        $hasil = (30/30)*$persen;
+                    }
+                    else
+                    {
+                        $hasil = ($jml/30)*$persen;
+                    }
+                }
+
+                $pegawai[$i][$m] = number_format($hasil*100,2);
+            }
+
+            $i++;
+        }
+
+        $puasa_p = 0;
+        $tahajud_p = 0;
+        $sodaqoh_p = 0;
+        $alquran_p = 0;
+
+        foreach ($pegawai as $pg)
+        {
+            $puasa_p = $puasa_p + $pg['psa_mhb'];
+            $tahajud_p = $tahajud_p + $pg['thj_mhb'];
+            $sodaqoh_p = $sodaqoh_p + $pg['sdq_mhb'];
+            $alquran_p = $alquran_p + $pg['alq_mhb'];
+        }
+
+        if ($this->session->userdata('hak') == "user")
+        {
+            $total_p = $puasa_p + $tahajud_p + $sodaqoh_p + $alquran_p;
+
+            $data->puasa_p = $puasa_p;
+            $data->tahajud_p = $tahajud_p;
+            $data->sodaqoh_p = $sodaqoh_p;
+            $data->alquran_p = $alquran_p;
+        }
+        else
+        {
+            $total_p = ($puasa_p/$total_pgw) + ($tahajud_p/$total_pgw) + ($sodaqoh_p/$total_pgw) + ($alquran_p/$total_pgw);
+
+            $data->puasa_p = ($puasa_p/$total_pgw);
+            $data->tahajud_p = ($tahajud_p/$total_pgw);
+            $data->sodaqoh_p = ($sodaqoh_p/$total_pgw);
+            $data->alquran_p = ($alquran_p/$total_pgw);
+        }
+        $data->total_p = $total_p;
+
+//Muhasabah tahun
+        if ($this->session->userdata('hak') == "user")
+        {
+            $pegawai_t = $this->db->select('nma_lkp_pgw,id_pgw')->where('id_pgw',$this->session->userdata('id_pgw'))->get('tb_pegawai')->result_array();
+        }
+        else
+        {
+            $pegawai_t = $this->db->select('nma_lkp_pgw,id_pgw')->get('tb_pegawai')->result_array();
+        }
+
+        $i = 0;
+        foreach ($pegawai_t as $k)
+        {
+            foreach($muhasabah as $m)
+            {
+                $this->db->where("year(tgl_mhb) =",$thn);
+                $this->db->where('id_pgw', $k['id_pgw']);
+                $this->db->where($m, "Y");
+                $jml = count($this->db->get('tb_muhasabah')->result_array());
+                $hasil = 0;
+                $persen = 0.25;
+
+                if ($m == "psa_mhb")
+                {
+                    if ($jml > 8)
+                    {
+                        $hasil = (8/8)*$persen;
+                    }
+                    else
+                    {
+                        $hasil = ($jml/8)*$persen;
+                    }
+                }
+                else
+                {
+                    if ($jml > 30)
+                    {
+                        $hasil = (30/30)*$persen;
+                    }
+                    else
+                    {
+                        $hasil = ($jml/30)*$persen;
+                    }
+                }
+
+                $pegawai_t[$i][$m] = number_format($hasil*100,2);
+            }
+
+            $i++;
+        }
+
+        $puasa_t = 0;
+        $tahajud_t = 0;
+        $sodaqoh_t = 0;
+        $alquran_t = 0;
+
+        foreach ($pegawai_t as $pg)
+        {
+            $puasa_t = $puasa_t + $pg['psa_mhb'];
+            $tahajud_t = $tahajud_t + $pg['thj_mhb'];
+            $sodaqoh_t = $sodaqoh_t + $pg['sdq_mhb'];
+            $alquran_t = $alquran_t + $pg['alq_mhb'];
+        }
+
+        if ($this->session->userdata('hak') == "user")
+        {
+            $total_t = $puasa_t + $tahajud_t + $sodaqoh_t + $alquran_t;
+
+            $data->puasa_t = $puasa_t;
+            $data->tahajud_t = $tahajud_t;
+            $data->sodaqoh_t = $sodaqoh_t;
+            $data->alquran_t = $alquran_t;
+        }
+        else
+        {
+            $total_t = ($puasa_t/$total_pgw) + ($tahajud_t/$total_pgw) + ($sodaqoh_t/$total_pgw) + ($alquran_t/$total_pgw);
+
+            $data->puasa_t = ($puasa_t/$total_pgw);
+            $data->tahajud_t = ($tahajud_t/$total_pgw);
+            $data->sodaqoh_t = ($sodaqoh_t/$total_pgw);
+            $data->alquran_t = ($alquran_t/$total_pgw);
+        }
+        $data->total_t = $total_t;
+
         return $data;
+    }
+
+    function rekap()
+    {
+        $id_pgw = $this->session->userdata('id_pgw');
+        date_default_timezone_set("Asia/Jakarta");
+        $tgl = date("d");
+        $bln = date("m");
+        $thn = date("Y");
+
+        if ($tgl >= 21 && $bln != 12)
+        {
+            $tanggal_awal = $thn.'-'.$bln.'-21';
+            $tanggal_akhir = $thn.'-'.($bln+1).'-20';
+        }
+        else if ($tgl < 21 && $bln != 1)
+        {
+            $tanggal_awal = $thn.'-'.($bln-1).'-21';
+            $tanggal_akhir = $thn.'-'.$bln.'-20';
+        }
+        else if ($tgl >= 21 && $bln == 12)
+        {
+            $tanggal_awal = $thn.'-'.$bln.'-21';
+            $tanggal_akhir = ($thn+1).'-1-20';
+        }
+        else if ($tgl < 21 && $bln == 1)
+        {
+            $tanggal_awal = ($thn-1).'-12-21';
+            $tanggal_akhir = $thn.'-'.$bln.'-20';
+        }
+
+        $i = 0;
+        $status = array('Y','T');
+        foreach($status as $stat)
+        {
+            //Izin
+            $this->db->where("tgl_pjn_abs >=",$tanggal_awal);
+            $this->db->where("tgl_pjn_abs <=",$tanggal_akhir);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+            $this->db->where("stat_abs", $stat);
+            $izin[$stat] = count($this->db->get('tb_izin_absen')->result_array());
+
+            $this->db->where("YEAR(tgl_pjn_abs)",$thn);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+                
+            $this->db->where("stat_abs", $stat);
+            $izin[$stat."T"] = count($this->db->get('tb_izin_absen')->result_array());
+
+            //Pelatihan
+            $this->db->where("tgl_pjn_lth >=",$tanggal_awal);
+            $this->db->where("tgl_pjn_lth <=",$tanggal_akhir);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+                
+            $this->db->where("stat_lth", $stat);
+            $pelatihan[$stat] = count($this->db->get('tb_pelatihan')->result_array());
+
+            $this->db->where("YEAR(tgl_pjn_lth)",$thn);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+                
+            $this->db->where("stat_lth", $stat);
+            $pelatihan[$stat."T"] = count($this->db->get('tb_pelatihan')->result_array());
+        
+            //SPPD
+            $this->db->where("tgl_pju_sppd >=",$tanggal_awal);
+            $this->db->where("tgl_pju_sppd <=",$tanggal_akhir);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+                
+            $this->db->where("apprv_sppd", $stat);
+            $sppd[$stat] = count($this->db->get('tb_sppd')->result_array());
+
+            $this->db->where("YEAR(tgl_pju_sppd)",$thn);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+                
+            $this->db->where("apprv_sppd", $stat);
+            $sppd[$stat."T"] = count($this->db->get('tb_sppd')->result_array());
+        }
+
+        $rekap = new stdClass();
+        $rekap->izin = $izin;
+        $rekap->pelatihan = $pelatihan;
+        $rekap->sppd = $sppd;
+        
+        return $rekap;
+    }
+
+    function repu()
+    {
+        $id_pgw = $this->session->userdata('id_pgw');
+        date_default_timezone_set("Asia/Jakarta");
+        $tgl = date("d");
+        $bln = date("m")-1;
+        $thn = date("Y");
+
+        if ($tgl >= 21 && $bln != 12)
+        {
+            $tanggal_awal = $thn.'-'.$bln.'-21';
+            $tanggal_akhir = $thn.'-'.($bln+1).'-20';
+        }
+        else if ($tgl < 21 && $bln != 1)
+        {
+            $tanggal_awal = $thn.'-'.($bln-1).'-21';
+            $tanggal_akhir = $thn.'-'.$bln.'-20';
+        }
+        else if ($tgl >= 21 && $bln == 12)
+        {
+            $tanggal_awal = $thn.'-'.$bln.'-21';
+            $tanggal_akhir = ($thn+1).'-1-20';
+        }
+        else if ($tgl < 21 && $bln == 1)
+        {
+            $tanggal_awal = ($thn-1).'-12-21';
+            $tanggal_akhir = $thn.'-'.$bln.'-20';
+        }
+
+        $i = 0;
+        $status = array('SP1','SP2','SP3');
+        foreach($status as $stat)
+        {
+            //punishment
+            $this->db->where("tgl_pun >=",$tanggal_awal);
+            $this->db->where("tgl_pun <=",$tanggal_akhir);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+            $this->db->where("jns_pun", $stat);
+            
+            $punishment[$stat] = count($this->db->get("tb_punishment")->result());                
+
+            $this->db->where("YEAR(tgl_pun)",$thn);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+            $this->db->where("jns_pun", $stat);
+            
+            $punishment[$stat."t"] = count($this->db->get("tb_punishment")->result());                
+        }
+
+        $status = array('khusus','teladan');
+        foreach($status as $stat)
+        {
+            //reward
+            $this->db->where("tgl_reward >=",$tanggal_awal);
+            $this->db->where("tgl_reward <=",$tanggal_akhir);
+            
+            $this->db->where("jns_reward", $stat);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+            $reward[$stat] = count($this->db->get("tb_reward")->result());                
+
+            $this->db->where("YEAR(tgl_reward)",$thn);
+            if ($this->session->userdata('hak') == "user")
+            {
+                $this->db->where("id_pgw", $id_pgw);
+            }
+            $this->db->where("jns_reward", $stat);
+            
+            $reward[$stat."t"] = count($this->db->get("tb_reward")->result());                
+        }
+
+        $repu = new stdClass();
+        $repu->punishment = $punishment;
+        $repu->reward = $reward;
+
+        return $repu;
+    }
+
+    public function pegawai_teladan()
+    {
+        date_default_timezone_set("Asia/Jakarta");
+        $tgl = date('d');
+        $bln = date('m');
+        $thn = date('Y');
+        $div_jbtn = array();
+        $temp_kpi_mhb = '';
+
+        if ($tgl >= 21)
+        {
+            if ($bln == 1)
+            {
+                $bln = 12;
+                $thn--;
+            }
+            else
+            {
+                $bln--;
+            }
+        }
+        else if ($tgl <= 20)
+        {
+            if ($bln == 1)
+            {
+                $bln = 12-1;
+                $thn--;
+            }
+            else
+            {
+                $bln = $bln - 2;
+            }   
+        }
+
+        $this->db->join("tb_jabatan","tb_jabatan.id_jbtn = tb_pegawai.id_jbtn");
+        $pegawai = $this->db->select('nma_lkp_pgw,id_pgw,nik_pgw,photo_pgw,nma_jbtn')->get('tb_pegawai')->result_array();
+        
+        $i = 0;
+        foreach ($pegawai as $p)
+        {
+            $this->db->where('id_pgw', $p['id_pgw']);
+            $this->db->where('periode_mhb_pgw', $thn.'-'.$bln.'-01');
+            $mhb = $this->db->get('tb_muhasabah_pegawai')->row();
+
+            if (count($mhb) < 1)
+            {
+                $temp_kpi_mhb = '0';
+            }
+            else
+            {
+                $temp_kpi_mhb = $mhb->kpi_mhb_pgw;    
+            }
+
+            $this->db->where('id_pgw', $p['id_pgw']);
+            $this->db->where('awal_periode_presensi_pegawai', $thn.'-'.$bln.'-21');
+            $prs = $this->db->get('tb_presensi_pegawai')->row();
+
+            if (count($prs) < 1)
+            {
+                $kpi[$i]['foto'] = $p['photo_pgw'];
+                $kpi[$i]['nama'] = $p['nma_lkp_pgw'];
+                $kpi[$i]['nik'] = $p['nik_pgw'];
+                $kpi[$i]['jabatan'] = $p['nma_jbtn']; 
+                $kpi[$i]['kpi_Total'] = 0 + $temp_kpi_mhb;
+            }
+            else
+            {
+                $kpi[$i]['foto'] = $p['photo_pgw'];
+                $kpi[$i]['nama'] = $p['nma_lkp_pgw'];
+                $kpi[$i]['nik'] = $p['nik_pgw'];
+                $kpi[$i]['jabatan'] = $p['nma_jbtn'];
+                $kpi[$i]['kpi_total'] = $prs->hadir_presensi_pegawai + $temp_kpi_mhb;   
+            }
+
+            $i++;
+        }
+
+        $max = -9999999;
+        $teladan = null;
+        
+        foreach($kpi as $k=>$v)
+        {
+            if(array_key_exists('kpi_total',$v))
+            {
+                if ($v['kpi_total'] > $max)
+                {
+                    $max = $v['kpi_total'];
+                    $teladan = $v;
+                }
+            }
+        }
+
+        return $teladan;
     }
 }

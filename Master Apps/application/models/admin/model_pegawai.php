@@ -146,6 +146,16 @@ class Model_pegawai extends Model_tambahan
         $this->db->select('id_pgw,nik_pgw,nma_lkp_pgw,email_pgw,div_jbtn,nma_jbtn,stat_akt_pgw');
         $this->db->from('tb_pegawai');
         $this->db->join('tb_jabatan','tb_jabatan.id_jbtn = tb_pegawai.id_jbtn');
+
+        if ($this->session->userdata("jabatan") == "direktur marketing")
+        {
+            $this->db->where('tb_jabatan.div_jbtn','marketing');
+        }
+        else if ($this->session->userdata("jabatan") == "direktur operasional")
+        {
+            $this->db->where('div_jbtn','operasional');
+        }
+
         $result = $this->db->get()->result();
 
         return $result;
@@ -157,6 +167,14 @@ class Model_pegawai extends Model_tambahan
         $this->db->from('tb_pegawai');
         $this->db->where('tb_pegawai.id_pgw',$id_pgw);
         $this->db->join('tb_jabatan','tb_jabatan.id_jbtn = tb_pegawai.id_jbtn');
+        if ($this->session->userdata("jabatan") == "direktur marketing")
+        {
+            $this->db->where('tb_jabatan.div_jbtn','marketing');
+        }
+        else if ($this->session->userdata("jabatan") == "direktur operasional")
+        {
+            $this->db->where('div_jbtn','operasional');
+        }
         $result = $this->db->get()->row();
 
         return $result;
@@ -167,7 +185,21 @@ class Model_pegawai extends Model_tambahan
         date_default_timezone_set("Asia/Jakarta");
         $tgl_exp = explode('/',$this->input->post('tanggal'));
         $tgl = $tgl_exp[2].'-'.$tgl_exp[0].'-'.$tgl_exp[1];
-        
+        $level = '';
+        $divisi = $this->db->get_where("tb_jabatan",array('id_jbtn' => $this->input->post('jabatan')))->row();
+
+        if ($divisi->div_jbtn == "direksi" || $divisi->div_jbtn == "komisaris")
+        {
+            $level = "special user";
+        }
+        else if ($divisi->nma_jbtn == "kepala")
+        {
+            $level = "admin";
+        }
+        else
+        {
+            $level = "user";
+        }
 
         $pegawai = array (
             'id_jbtn' => $this->input->post('jabatan'),
@@ -179,7 +211,7 @@ class Model_pegawai extends Model_tambahan
             'almt_pgw' => $this->input->post('alamat'),
             'jk_pgw' => $this->input->post('jk'),
             'stat_pgw' => $this->input->post('status'),
-            'lev_usr_pgw' => $this->input->post('level'),
+            'lev_usr_pgw' => $level,
             'uname_pgw' => $this->input->post('username'),
             'pass_pgw' => md5($random_pass),
             'photo_pgw' => null,
@@ -231,6 +263,22 @@ class Model_pegawai extends Model_tambahan
         $tgl_exp = explode('/',$this->input->post('tanggal'));
         $tgl = $tgl_exp[2].'-'.$tgl_exp[0].'-'.$tgl_exp[1];
 
+        $level = '';
+        $divisi = $this->db->get_where("tb_jabatan",array('id_jbtn' => $this->input->post('jabatan')))->row();
+
+        if ($divisi->div_jbtn == "direksi" || $divisi->div_jbtn == "komisaris")
+        {
+            $level = "special user";
+        }
+        else if ($divisi->nma_jbtn == "kepala")
+        {
+            $level = "admin";
+        }
+        else
+        {
+            $level = "user";
+        }
+        
         if ($upload == null && $this->input->post('photo') != null)
         {
             $upload = $this->input->post('photo');
@@ -238,7 +286,9 @@ class Model_pegawai extends Model_tambahan
         
         if (md5($this->input->post('password')) == $this->session->flashdata('pass') || $this->input->post('password') == "")
         {
-            $pegawai = array (
+            if ($this->session->userdata("hak") == "admin")
+            {
+                $pegawai = array (
                 'id_jbtn' => $this->input->post('jabatan'),
                 'nik_pgw' => $this->input->post('nik'),
                 'no_ktp_pgw' => $this->input->post('no_ktp'),
@@ -248,7 +298,7 @@ class Model_pegawai extends Model_tambahan
                 'almt_pgw' => $this->input->post('alamat'),
                 'jk_pgw' => $this->input->post('jk'),
                 'stat_pgw' => $this->input->post('status'),
-                'lev_usr_pgw' => $this->input->post('level'),
+                'lev_usr_pgw' => $level,
                 'uname_pgw' => $this->input->post('username'),
                 'photo_pgw' => null,
                 'tmp_lhr_pgw' => $this->input->post('tempat'),
@@ -257,35 +307,82 @@ class Model_pegawai extends Model_tambahan
                 'telp_pgw' => $this->input->post('no_tlp'),
                 'gol_drh_pgw' => $this->input->post('gd'),
                 'nma_psg_pgw' => $this->input->post('pasangan'),
-                'pc_ktp_pgw' => $upload,
-                'stat_akt_pgw' => 'Y'
-                );
+                'pc_ktp_pgw' => $upload
+                );    
+            }
+            else
+            {
+                $pegawai = array (
+                    'nik_pgw' => $this->input->post('nik'),
+                    'no_ktp_pgw' => $this->input->post('no_ktp'),
+                    'npwp_pgw' => $this->input->post('npwp'),
+                    'nma_lkp_pgw' => $this->input->post('nama'),
+                    'email_pgw' => $this->input->post('email'),
+                    'almt_pgw' => $this->input->post('alamat'),
+                    'jk_pgw' => $this->input->post('jk'),
+                    'stat_pgw' => $this->input->post('status'),
+                    'uname_pgw' => $this->input->post('username'),
+                    'photo_pgw' => null,
+                    'tmp_lhr_pgw' => $this->input->post('tempat'),
+                    'tgl_lhr_pgw' => $tgl,
+                    'hp_pgw' => $this->input->post('no_hp'),
+                    'telp_pgw' => $this->input->post('no_tlp'),
+                    'gol_drh_pgw' => $this->input->post('gd'),
+                    'nma_psg_pgw' => $this->input->post('pasangan'),
+                    'pc_ktp_pgw' => $upload
+                    );
+            }
         }
         else
         {
-            $pegawai = array (
-                'id_jbtn' => $this->input->post('jabatan'),
-                'nik_pgw' => $this->input->post('nik'),
-                'no_ktp_pgw' => $this->input->post('no_ktp'),
-                'npwp_pgw' => $this->input->post('npwp'),
-                'nma_lkp_pgw' => $this->input->post('nama'),
-                'email_pgw' => $this->input->post('email'),
-                'almt_pgw' => $this->input->post('alamat'),
-                'jk_pgw' => $this->input->post('jk'),
-                'stat_pgw' => $this->input->post('status'),
-                'lev_usr_pgw' => $this->input->post('level'),
-                'uname_pgw' => $this->input->post('username'),
-                'pass_pgw' => md5($this->input->post('password')),
-                'photo_pgw' => null,
-                'tmp_lhr_pgw' => $this->input->post('tempat'),
-                'tgl_lhr_pgw' => $tgl,
-                'hp_pgw' => $this->input->post('no_hp'),
-                'telp_pgw' => $this->input->post('no_tlp'),
-                'gol_drh_pgw' => $this->input->post('gd'),
-                'nma_psg_pgw' => $this->input->post('pasangan'),
-                'pc_ktp_pgw' => $upload,
-                'stat_akt_pgw' => 'Y'
-                );
+            if ($this->session->userdata("hak") == "admin")
+            {
+                $pegawai = array (
+                    'id_jbtn' => $this->input->post('jabatan'),
+                    'nik_pgw' => $this->input->post('nik'),
+                    'no_ktp_pgw' => $this->input->post('no_ktp'),
+                    'npwp_pgw' => $this->input->post('npwp'),
+                    'nma_lkp_pgw' => $this->input->post('nama'),
+                    'email_pgw' => $this->input->post('email'),
+                    'almt_pgw' => $this->input->post('alamat'),
+                    'jk_pgw' => $this->input->post('jk'),
+                    'stat_pgw' => $this->input->post('status'),
+                    'lev_usr_pgw' => $level,
+                    'uname_pgw' => $this->input->post('username'),
+                    'pass_pgw' => md5($this->input->post('password')),
+                    'photo_pgw' => null,
+                    'tmp_lhr_pgw' => $this->input->post('tempat'),
+                    'tgl_lhr_pgw' => $tgl,
+                    'hp_pgw' => $this->input->post('no_hp'),
+                    'telp_pgw' => $this->input->post('no_tlp'),
+                    'gol_drh_pgw' => $this->input->post('gd'),
+                    'nma_psg_pgw' => $this->input->post('pasangan'),
+                    'pc_ktp_pgw' => $upload
+                    );
+            }
+            else
+            {       
+                $pegawai = array (
+                    'nik_pgw' => $this->input->post('nik'),
+                    'no_ktp_pgw' => $this->input->post('no_ktp'),
+                    'npwp_pgw' => $this->input->post('npwp'),
+                    'nma_lkp_pgw' => $this->input->post('nama'),
+                    'email_pgw' => $this->input->post('email'),
+                    'almt_pgw' => $this->input->post('alamat'),
+                    'jk_pgw' => $this->input->post('jk'),
+                    'stat_pgw' => $this->input->post('status'),
+                    'uname_pgw' => $this->input->post('username'),
+                    'pass_pgw' => md5($this->input->post('password')),
+                    'photo_pgw' => null,
+                    'tmp_lhr_pgw' => $this->input->post('tempat'),
+                    'tgl_lhr_pgw' => $tgl,
+                    'hp_pgw' => $this->input->post('no_hp'),
+                    'telp_pgw' => $this->input->post('no_tlp'),
+                    'gol_drh_pgw' => $this->input->post('gd'),
+                    'nma_psg_pgw' => $this->input->post('pasangan'),
+                    'pc_ktp_pgw' => $upload
+                    );
+            }
         }
 
         if ($this->db->where('id_pgw',$id_pgw)->update('tb_pegawai',$pegawai)) 
@@ -296,8 +393,11 @@ class Model_pegawai extends Model_tambahan
 
             if ($this->db->where('id_pgw',$id_pgw)->update('tb_akun',$akun)) 
             {
-                $this->session->set_userdata('nik',$this->input->post('nik'));
-                $this->session->set_userdata('nama',$this->input->post('nama'));
+                if ($this->session->userdata("id_pgw") == $id_pgw)
+                {
+                    $this->session->set_userdata('nik',$this->input->post('nik'));
+                    $this->session->set_userdata('nama',$this->input->post('nama'));
+                }
                 return true;
             }
             else
@@ -351,5 +451,25 @@ class Model_pegawai extends Model_tambahan
         {
             return false;
         }
+    }
+
+    function cetak($id_pgw)
+    {
+        $data = new stdClass;
+        $this->db->join("tb_jabatan","tb_jabatan.id_jbtn = tb_pegawai.id_jbtn");
+        $data->pegawai = $this->db->get_where("tb_pegawai",array('id_pgw' => $id_pgw))->row();
+        $data->sim = $this->db->get_where("tb_sim",array('id_pgw' => $id_pgw))->row();
+        $this->db->join("tb_bank","tb_bank.id_bank = tb_rek_bank.id_bank");
+        $data->rekening = $this->db->get_where("tb_rek_bank",array('id_pgw' => $id_pgw))->row();
+        $this->db->join("tb_formal","tb_formal.id_pnd_formal = tb_detil_formal.id_pnd_formal");
+        $this->db->order_by("thn_dtl_formal","asc");
+        $data->formal = $this->db->get_where("tb_detil_formal",array('id_pgw' => $id_pgw))->result();
+        $data->informal = $this->db->get_where("tb_detil_informal",array('id_pgw' => $id_pgw))->result();
+        $data->usaha = $this->db->get_where("tb_usaha_aktifitas",array('id_pgw' => $id_pgw))->result();
+        $this->db->order_by("no_urut_anak","asc");
+        $data->anak = $this->db->get_where("tb_anak",array('id_pgw' => $id_pgw))->result();
+        $data->kendaraan = $this->db->get_where("tb_kendaraan_motor",array('id_pgw' => $id_pgw))->row();
+
+        return $data;
     }
 }

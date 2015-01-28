@@ -39,7 +39,7 @@
 */
 
 $route['default_controller'] = "admin/beranda";
-$route['404_override'] = '';
+$route['404_override'] = "welcome";
 
 $route['admin/logout'] = "admin/logout";
 $route['admin/login'] = "admin/login";
@@ -130,6 +130,10 @@ $route['admin/pelatihan'] = "admin/pelatihan";
 $route['admin/pelatihan/cari'] = "admin/pelatihan/index/cari";
 $route['admin/pelatihan/tambah'] = "admin/pelatihan/tambah";
 $route['admin/pelatihan/ubah/(:num)'] = "admin/pelatihan/ubah/$1";
+
+//SPPD
+$route['admin/sppd/cari'] = "admin/sppd/index/cari";
+
 //////AkhirModul Pengajuan
 
 /* End of file routes.php */

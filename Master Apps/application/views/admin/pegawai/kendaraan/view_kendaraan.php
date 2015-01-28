@@ -3,7 +3,14 @@
 				<div class="page-header">
 					<div class="pull-left">
 						<h1>Kendaraan Bermotor</h1>
+						<?php
+						if ($this->session->userdata("hak") == "admin")
+						{
+						?>
 						<a href="<?php echo base_url(); ?>admin/kendaraan/tambah" class="btn btn-primary">Tambah</a>
+						<?php
+						}
+						?>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -14,7 +21,7 @@
 					?>
 						<div class="alert alert-success">
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<strong>Berhasil !</strong> Data pendidikan formal berhasil ditambahkan.
+							<strong>Berhasil !</strong> Data kendaraan bermotor berhasil ditambahkan.
 						</div>
 					<?php
 						}
@@ -32,7 +39,7 @@
 					?>
 						<div class="alert alert-success">
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<strong>Berhasil !</strong> Mengubah data pendidikan formal.
+							<strong>Berhasil !</strong> Mengubah data kendaraan bermotor.
 						</div>
 					<?php
 						}
@@ -53,7 +60,14 @@
 											<th class='hidden-350'>Merk</th>
 											<th class='hidden-350'>No. Polisi</th>
 											<th class='hidden-350'>Stiker</th>
+											<?php
+											if ($this->session->userdata("hak") == "admin")
+											{
+											?>
 											<th>Aksi</th>
+											<?php
+											}
+											?>
 										</tr>
 									</thead>
 									<tbody>
@@ -88,6 +102,10 @@
 													echo $kdr->stat_kdr_mtr;
 												?>
 											</td>
+											<?php
+											if ($this->session->userdata("hak") == "admin")
+											{
+											?>
 											<td class="btn-group">
 												<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="icon-cogs"></i> <span class="caret"></span></a>
 												<ul class="dropdown-menu">
@@ -96,6 +114,9 @@
 													</li>
 												</ul>
 											</td>
+											<?php
+											}
+											?>
 										</tr>
 										<?php
 											}

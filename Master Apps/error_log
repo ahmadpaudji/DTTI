@@ -1,0 +1,10 @@
+[29-Oct-2014 14:00:24 Asia/Jakarta] PHP Fatal error:  Call to undefined method Statistik::kpi_pelatihan() in /home/ozantcom/public_html/dti/application/controllers/admin/kpi.php on line 19
+[29-Oct-2014 14:29:43 Asia/Jakarta] PHP Fatal error:  Call to undefined method Statistik::kpi_pelatihan() in /home/ozantcom/public_html/dti/application/controllers/admin/kpi.php on line 19
+[07-Nov-2014 16:58:42 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_muhasabah::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/muhasabah.php on line 200
+[07-Nov-2014 16:58:55 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_muhasabah::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/muhasabah.php on line 200
+[07-Nov-2014 16:58:55 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_muhasabah::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/muhasabah.php on line 200
+[07-Nov-2014 16:58:57 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_muhasabah::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/muhasabah.php on line 200
+[07-Nov-2014 16:59:35 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_absen::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/absen.php on line 303
+[07-Nov-2014 16:59:36 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_absen::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/absen.php on line 303
+[07-Nov-2014 17:00:08 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_reward::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/reward.php on line 146
+[07-Nov-2014 17:00:11 Asia/Jakarta] PHP Fatal error:  Call to undefined method Model_reward::get_direktur() in /home/ozantcom/public_html/dti/application/controllers/admin/reward.php on line 146

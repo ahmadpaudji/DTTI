@@ -44,6 +44,17 @@
 					<?php
 						}
 					?>
+						<?php
+						if ($this->session->flashdata("notif"))
+						{
+						?>
+						<div class="alert alert-<?php echo $this->session->flashdata('alert');?>">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							<?php echo $this->session->flashdata('notif');?>
+						</div>
+						<?php
+							}
+						?>
 						<div class="box">
 							<div class="box-title">
 								<h3><i class="icon-edit"></i>Data Izin Presensi</h3>
@@ -107,6 +118,17 @@
 				?>
 				<div class="row-fluid">
 					<div class="span12">
+						<?php
+						if ($this->session->userdata("hak") == "admin")
+						{
+							?>
+							<div>
+								<a href="<?php echo base_url("admin/izin/rekap");?>" style="margin-left:2px" class="btn btn-primary"><i class="icon-credit-card"></i>&nbsp;REKAPITULASI</a>
+								
+							</div>
+						<?php
+						}
+						?>
 						<div class="box box-color box-bordered">
 							<div class="box-title">
 								<h3>
@@ -199,18 +221,7 @@
 												<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="icon-cogs"></i> <span class="caret"></span></a>
 												<ul class="dropdown-menu">
 												<?php
-												if ($this->session->userdata['hak'] == "admin" && $iz->stat_abs == 'N')
-												{
-												?>
-													<li>
-														<a href="<?php echo base_url(); ?>admin/izin/setuju/<?php echo $iz->id_abs.'/Y'; ?>">Setujui</a>
-													</li>
-													<li>
-														<a href="<?php echo base_url(); ?>admin/izin/setuju/<?php echo $iz->id_abs.'/T'; ?>">Tolak</a>
-													</li>
-												<?php
-												}
-												else if ($this->session->userdata['hak'] == "user" && $iz->stat_abs == 'N')
+												if ($this->session->userdata['hak'] != "admin" && $iz->stat_abs == 'N')
 												{
 												?>
 													<li>
@@ -218,7 +229,15 @@
 													</li>
 												<?php
 												}
-												else if ($this->session->userdata['hak'] == "user" || $this->session->userdata['hak'] == "admin" && $iz->stat_abs == 'T')
+												else if ($this->session->userdata['hak'] == "admin" && $iz->stat_abs == 'Y')
+												{
+												?>
+													<li>
+														<a href="<?php echo base_url(); ?>admin/izin/ubah/<?php echo $iz->id_abs; ?>">Ubah</a>
+													</li>
+												<?php
+												}
+												else if ($this->session->userdata['hak'] == "admin" || $iz->stat_abs == 'Y' || $iz->stat_abs == 'T')
 												{
 												?>
 													<li>
@@ -226,17 +245,9 @@
 													</li>
 												<?php
 												}
-												else if ($this->session->userdata['hak'] == "admin" && $iz->stat_abs == 'Y')
-												{
-												?>
-													<li>
-														<a href="#">Cetak</a>
-													</li>
-												<?php
-												}
 												?>
 												</ul>
-												<a href="<?php echo base_url(); ?>admin/izin/detail/<?php echo $iz->id_abs; ?>" style="margin-left:2px" class="btn btn-primary"><i class="icon-eye-open"></i></a>
+												<a href="<?php echo base_url(); ?>admin/izin/detail/<?php echo $iz->id_abs; ?>/pengajuan" style="margin-left:2px" class="btn btn-primary"><i class="icon-eye-open"></i></a>
 											</td>
 										</tr>
 										<?php

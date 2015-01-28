@@ -8,22 +8,28 @@
 				<div class="row-fluid">
 					<div class="span12">
 					<?php
-						if ($this->session->flashdata('errors'))
+						if ($this->session->flashdata('notif'))
 						{
 					?>
-						<div class="alert alert-error">
+						<div class="alert alert-<?php echo $this->session->flashdata('alert');?>">
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<?php echo $this->session->flashdata('errors'); ?>
+							<?php echo $this->session->flashdata('notif'); ?>
 						</div>
 					<?php
 						}
+						$tgl_upl = array();
+						for ($u = 21; $u <= 27 ; $u++)
+						{
+							$tgl_upl[] = $u;
+						}
+
 						date_default_timezone_set("Asia/Jakarta");
-						if (date("d") == 21)
+						if (in_array(date("d"),$tgl_upl))
 						{
 					?>
 						<div class="box">
 							<div class="box-title">
-								<h3><i class="icon-edit"></i>Upload Terakhir
+								<h3><i class="icon-edit"></i>Upload Terakhir<br/>
 								<?php
 									if (!is_null($last_upload->tanggal))
 									{
@@ -53,7 +59,7 @@
 						}
 						else
 						{
-							echo "Silahkan upload setiap tanggal 20 atau akhir periode";
+							echo "Silahkan upload setiap tanggal 20 - 27.";
 						}
 						?>
 						</div>

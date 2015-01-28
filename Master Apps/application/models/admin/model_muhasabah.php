@@ -84,7 +84,6 @@ class Model_muhasabah extends Model_tambahan
         }
 
         $isi = array (
-         'id_mhb' => $mhb,
          'id_pgw' => $this->session->userdata['id_pgw'],
          'tgl_mhb' => unix_to_human(mktime(0, 0, 0, $bln, $tgl, date("Y")),true,'eu'),
          'alq_mhb' => $alq,
@@ -196,6 +195,17 @@ class Model_muhasabah extends Model_tambahan
         }
         else
         {
+            $this->db->join('tb_jabatan','tb_jabatan.id_jbtn = tb_pegawai.id_jbtn');
+
+            if ($this->session->userdata("jabatan") == "direktur marketing")
+            {
+                $this->db->where('tb_jabatan.div_jbtn','marketing');
+            }
+            else if ($this->session->userdata("jabatan") == "direktur operasional")
+            {
+                $this->db->where('div_jbtn','operasional');
+            }
+            
             $pegawai = $this->db->select('nma_lkp_pgw,id_pgw')->get('tb_pegawai')->result_array();
         }
         
@@ -261,5 +271,46 @@ class Model_muhasabah extends Model_tambahan
         {
             return false;
         }
+    }
+
+    function cetak()
+    {
+        if ($this->session->flashdata("pegawai") != '')
+        {
+            $pegawai = $this->db->select('nma_lkp_pgw,id_pgw')->get_where('tb_pegawai',array('id_pgw' => $this->session->flashdata("pegawai")))->result_array();
+        }
+        else
+        {
+            $pegawai = $this->db->select('nma_lkp_pgw,id_pgw')->get('tb_pegawai')->result_array();
+        }
+        
+        $i = 0;
+        $muhasabah = array('thj_mhb','sdq_mhb','psa_mhb','alq_mhb');
+        foreach ($pegawai as $k)
+        {
+            foreach($muhasabah as $m)
+            {
+                if ($this->session->flashdata("tgl_awl") != '')
+                {
+                    $tgl_awal = explode('/', $this->session->flashdata('tgl_awl'));
+                    $tanggal_awal = $tgl_awal[2].'-'.$tgl_awal[0].'-'.$tgl_awal[1];
+                    $this->db->where("tgl_mhb >=",$tanggal_awal);
+                }
+                if ($this->session->flashdata("tgl_akh") != '')
+                {
+                    $tgl_akhir = explode('/', $this->session->flashdata('tgl_akh'));
+                    $tanggal_akhir = $tgl_akhir[2].'-'.$tgl_akhir[0].'-'.$tgl_akhir[1];
+                    $this->db->where("tgl_mhb <=",$tanggal_akhir);
+                }  
+                
+                $this->db->where('id_pgw', $k['id_pgw']);
+                
+                $this->db->where($m, "Y");
+                $pegawai[$i][$m] = count($this->db->get('tb_muhasabah')->result_array());
+            }
+
+            $i++;
+        }
+        return $pegawai;
     }
 }

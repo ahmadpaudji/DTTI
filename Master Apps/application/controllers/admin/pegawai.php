@@ -10,142 +10,207 @@ class Pegawai extends Admin_Controller
 
 	public function index()
 	{
-		$data['pegawai'] = $this->model_pegawai->index();
-		$aktif['nav'] = "pegawai";
-		$aktif['notif'] = $this->model_pegawai->notif();
+		if ($this->session->userdata("hak") != "user")
+		{
+			$data['pegawai'] = $this->model_pegawai->index();
+			$aktif['nav'] = "pegawai";
+			$aktif['notif'] = $this->model_pegawai->notif();
 
-		$this->load->view('admin/view_head');
-		$this->load->view('admin/view_navigation',$aktif);
-		$this->load->view('admin/view_left');
-		$this->load->view('admin/pegawai/pegawai/view_pegawai',$data);
+			$this->load->view('admin/view_head');
+			$this->load->view('admin/view_navigation',$aktif);
+			$this->load->view('admin/view_left');
+			$this->load->view('admin/pegawai/pegawai/view_pegawai',$data);
+		}
+		else
+		{
+			redirect();
+		}
 	}
 
-	public function detail($id_pgw)
+	public function detail($id_pgw = null)
 	{
-		$data['pegawai'] = $this->model_pegawai->detail($id_pgw);
-		$aktif['nav'] = "pegawai";
-		$aktif['notif'] = $this->model_pegawai->notif();
+		if ($id_pgw != null && $this->session->userdata("hak") != "user" || $id_pgw == $this->session->userdata("id_pgw"))
+		{
+			if ($this->model_pegawai->detail($id_pgw))
+			{
+				$data['pegawai'] = $this->model_pegawai->detail($id_pgw);
+			}
+			else
+			{
+				redirect();
+			}
+			
+			$aktif['nav'] = "pegawai";
+			$aktif['notif'] = $this->model_pegawai->notif();
 
-		$this->load->view('admin/view_head');
-		$this->load->view('admin/view_navigation',$aktif);
-		$this->load->view('admin/view_left');
-		$this->load->view('admin/pegawai/pegawai/view_detail_pegawai',$data);
+			$this->load->view('admin/view_head');
+			$this->load->view('admin/view_navigation',$aktif);
+			$this->load->view('admin/view_left');
+			$this->load->view('admin/pegawai/pegawai/view_detail_pegawai',$data);
+		}
+		else
+		{
+			redirect();
+		}
 	}
 
 	public function tambah()
 	{
-		$data['jabatan'] = $this->model_pegawai->jabatan();
-		$aktif['nav'] = "pegawai";
-		$aktif['notif'] = $this->model_pegawai->notif();
+		if ($this->session->userdata("hak") == "admin")
+		{
+			$data['jabatan'] = $this->model_pegawai->jabatan();
+			$aktif['nav'] = "pegawai";
+			$aktif['notif'] = $this->model_pegawai->notif();
 
-		$this->load->view('admin/view_head');
-		$this->load->view('admin/view_navigation',$aktif);
-		$this->load->view('admin/view_left');
-		$this->load->view('admin/pegawai/pegawai/view_tambah_pegawai',$data);
+			$this->load->view('admin/view_head');
+			$this->load->view('admin/view_navigation',$aktif);
+			$this->load->view('admin/view_left');
+			$this->load->view('admin/pegawai/pegawai/view_tambah_pegawai',$data);
+		}
+		else
+		{
+			redirect();
+		}
 	}
 
 	public function aksi_tambah()
 	{
-		$this->form_validation->set_rules($this->model_pegawai->tambah_pegawai_rules);
-		$this->form_validation->set_message('is_unique', '%s sudah digunakan.');
-		$upload = null;
-		$random_pass = strtotime(date("d-m-Y h:i:s"));
-
-		if($_FILES['userfile']['name'] != '')
+		if ($this->session->userdata("hak") == "admin")
 		{
-			if (!$this->photo_copy())
+			$this->form_validation->set_rules($this->model_pegawai->tambah_pegawai_rules);
+			$this->form_validation->set_message('is_unique', '%s sudah digunakan.');
+			$upload = null;
+			$random_pass = strtotime(date("d-m-Y h:i:s"));
+
+			if($_FILES['userfile']['name'] != '')
 			{
-				$this->session->set_flashdata('errors', "Ukuran file tidak lebih dari 2 MB dan berformat (*.jpg)");
+				if (!$this->photo_copy())
+				{
+					$this->session->set_flashdata('errors', "Ukuran file tidak lebih dari 2 MB dan berformat (*.jpg)");
+
+					redirect('admin/pegawai/tambah');
+				}
+				else
+				{
+					$upload = $this->photo_copy();
+				}
+			}
+
+			if($this->form_validation->run() == TRUE)
+			{
+				if ($this->model_pegawai->aksi_tambah($upload,$random_pass)) 
+				{
+					$this->email($this->input->post('email'),$this->input->post('username'),$random_pass);
+					redirect('admin/pegawai?sukses=ya');
+				}
+				else
+				{
+					redirect('admin/pegawai?sukses=tidak');
+				}
+			}
+			else
+			{
+				$this->session->set_flashdata('errors', validation_errors());
 
 				redirect('admin/pegawai/tambah');
 			}
-			else
-			{
-				$upload = $this->photo_copy();
-			}
-		}
-
-		if($this->form_validation->run() == TRUE)
-		{
-			if ($this->model_pegawai->aksi_tambah($upload,$random_pass)) 
-			{
-				$this->email($this->input->post('email'),$this->input->post('username'),$random_pass);
-				redirect('admin/pegawai?sukses=ya');
-			}
-			else
-			{
-				redirect('admin/pegawai?sukses=tidak');
-			}
 		}
 		else
 		{
-			$this->session->set_flashdata('errors', validation_errors());
-
-			redirect('admin/pegawai/tambah');
+			redirect();
 		}
 	}
 
-	public function ubah($id_pgw)
+	public function ubah($id_pgw = null)
 	{
-		$data['jabatan'] = $this->model_pegawai->jabatan();
-		$data['pegawai'] = $this->model_pegawai->ubah($id_pgw);
-		$aktif['nav'] = "pegawai";
-		$aktif['notif'] = $this->model_pegawai->notif();
-		$this->session->set_flashdata('pass', $data['pegawai']->pass_pgw);
-		
-		$this->load->view('admin/view_head');
-		$this->load->view('admin/view_navigation',$aktif);
-		$this->load->view('admin/view_left');
-		$this->load->view('admin/pegawai/pegawai/view_ubah_pegawai',$data);
+		if ($id_pgw != null && $id_pgw  == $this->session->userdata("id_pgw") || $id_pgw != null && $this->session->userdata("hak") == "admin")
+		{
+			$data['jabatan'] = $this->model_pegawai->jabatan();
+			$data['pegawai'] = $this->model_pegawai->ubah($id_pgw);
+			$aktif['nav'] = "pegawai";
+			$aktif['notif'] = $this->model_pegawai->notif();
+			$this->session->set_flashdata('pass', $data['pegawai']->pass_pgw);
+			
+			$this->load->view('admin/view_head');
+			$this->load->view('admin/view_navigation',$aktif);
+			$this->load->view('admin/view_left');
+			$this->load->view('admin/pegawai/pegawai/view_ubah_pegawai',$data);
+		}
+		else
+		{
+			redirect();
+		}
 	}
 
-	public function aksi_ubah($id_pgw)
+	public function aksi_ubah($id_pgw = null)
 	{
-		$this->form_validation->set_rules($this->model_pegawai->pegawai_rules);
-		$upload = null;
-		
-		if($_FILES['userfile']['name'] != '')
+		if ($id_pgw != null && $id_pgw  == $this->session->userdata("id_pgw") || $id_pgw != null && $this->session->userdata("hak") == "admin")
 		{
-			if (!$this->photo_copy())
+			$this->form_validation->set_rules($this->model_pegawai->pegawai_rules);
+			$upload = null;
+			
+			if($_FILES['userfile']['name'] != '')
 			{
-				$this->session->set_flashdata('errors', "Ukuran file tidak lebih dari 2 MB dan berformat (*.jpg)");
+				if (!$this->photo_copy())
+				{
+					$this->session->set_flashdata('errors', "Ukuran file tidak lebih dari 2 MB dan berformat (*.jpg)");
+
+					redirect('admin/pegawai/ubah/'.$id_pgw);
+				}
+				else
+				{
+					$upload = $this->photo_copy();
+				}
+			}
+
+			if($this->form_validation->run() == TRUE)
+			{
+				if ($this->model_pegawai->aksi_ubah($id_pgw,$upload)) 
+				{
+					if ($this->session->userdata("hak") == "admin")
+					{
+						$this->email($this->input->post('email'),$this->input->post('username'),$this->input->post('password'));
+						redirect('admin/pegawai?sukses_ubah=ya');
+					}
+					else
+					{
+						redirect();
+					}
+				}
+				else
+				{
+					redirect('admin/pegawai?sukses=tidak');
+				}
+			}
+			else
+			{
+				$this->session->set_flashdata('errors', validation_errors());
 
 				redirect('admin/pegawai/ubah/'.$id_pgw);
 			}
-			else
-			{
-				$upload = $this->photo_copy();
-			}
-		}
-
-		if($this->form_validation->run() == TRUE)
-		{
-			if ($this->model_pegawai->aksi_ubah($id_pgw,$upload)) 
-			{
-				redirect('admin/pegawai?sukses_ubah=ya');
-			}
-			else
-			{
-				redirect('admin/pegawai?sukses=tidak');
-			}
 		}
 		else
 		{
-			$this->session->set_flashdata('errors', validation_errors());
-
-			redirect('admin/pegawai/ubah/'.$id_pgw);
+			redirect();
 		}
 	}
 
 	public function aktifasi($id_pgw,$status)
 	{
-		if ($this->model_pegawai->aktifasi($id_pgw,$status))
+		if ($this->session->userdata("hak") == "admin")
 		{
-			redirect('admin/pegawai');
+			if ($this->model_pegawai->aktifasi($id_pgw,$status))
+			{
+				redirect('admin/pegawai');
+			}
+			else
+			{
+				redirect('admin/pegawai');
+			}
 		}
 		else
 		{
-			return false;
+			redirect();
 		}
 	}
 
@@ -260,17 +325,17 @@ class Pegawai extends Admin_Controller
 
 		$config = Array(
 			'protocol' => 'smtp',
-			'smtp_host' => 'ssl://smtp.googlemail.com',
-			'smtp_port' => 465,
-			'smtp_user' => 'dyo.9913@email.unikom.ac.id',
-			'smtp_pass' => 'unikom1234',
+			'smtp_host' => 'mail.ozan-soft.com',
+			'smtp_port' => 26,
+			'smtp_user' => 'noreply_dti@ozan-soft.com',
+			'smtp_pass' => '123qweasdzxc',
 			'mailtype' => 'html',
 			'charset' => 'UTF-8',
 			'wordwrap' => TRUE
 			);
 
     	$this->load->library('email', $config); 
-    	$this->email->from("dyo.9913@email.unikom.ac.id","Handoyo");
+    	$this->email->from("noreply_dti@ozan-soft.com","Duta Transformasi Insani");
     	$this->email->to($email);
     	$this->email->subject("[NO REPLY] Data Pegawai PT. Duta Transformasi Insani");
     	$this->email->message($psn);
@@ -282,11 +347,10 @@ class Pegawai extends Admin_Controller
 
 	public function cetak($id_pgw)
 	{
-		$data['pegawai'] = $this->model_pegawai->detail($id_pgw);
-		$this->load->view('admin/pegawai/pegawai/view_cetak_pegawai',$data);
+		$data['pegawai'] = $this->model_pegawai->cetak($id_pgw);
+
+		$html = $this->load->view('pdf/cetak_biodata',$data,true);
 		// Get output html
-		$html = $this->output->get_output();
-		
 		// Load library
 		$this->load->library('dompdf_gen');
 		
@@ -295,6 +359,6 @@ class Pegawai extends Admin_Controller
 		$this->dompdf->render();
 		$this->dompdf->stream("Pegawai.pdf");
 
-		redirect('admin/pegawai/detail/'.$id_pgw);
+		//redirect('admin/pegawai/detail/'.$id_pgw);
 	}
 }
