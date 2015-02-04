@@ -72,7 +72,7 @@
 <XPD:OBJ name="NameCompartment" type="UMLNameCompartmentView" guid="dMy8I/29DEeYckTd0BLZ6gAA">
 <XPD:OBJ name="NameLabel" type="LabelView" guid="PvbZgLBtVk2ZIloXjVdGXQAA">
 <XPD:ATTR name="FontStyle" type="integer">1</XPD:ATTR>
-<XPD:ATTR name="Text" type="string">Kelola Biodata Pegawai</XPD:ATTR>
+<XPD:ATTR name="Text" type="string">Tambah Data Pegawai</XPD:ATTR>
 </XPD:OBJ>
 <XPD:OBJ name="StereotypeLabel" type="LabelView" guid="RJ1AyXyBTE+NUqJbE5WQRQAA">
 <XPD:ATTR name="Visible" type="boolean">False</XPD:ATTR>
@@ -1576,7 +1576,7 @@
 <XPD:REF name="Associations[5]">5vT5PQwRcEiNVrRxv8Ye2gAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="OwnedElements[1]" type="UMLUseCase" guid="mz06pq5lGEewo4QYm5Y5XAAA">
-<XPD:ATTR name="Name" type="string">Kelola Biodata Pegawai</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">Tambah Data Pegawai</XPD:ATTR>
 <XPD:REF name="Namespace">nK8j0HLlUUC9idFKoQ8utQAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">j64jq3EhnUO9zlzPLtJTpAAA</XPD:REF>
@@ -2304,8 +2304,8 @@
 <XPD:REF name="Participant">+jaRYQjVtkK+EPwXMJWuCwAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">NdjFF+Q9KEKeVROy9YSuBwAA</XPD:REF>
-<XPD:REF name="Views[1]">b1iwNgtQi0Gd0O+EIxvK2QAA</XPD:REF>
-<XPD:REF name="Views[2]">thKmRVpkHE6/p34RFSZ0CwAA</XPD:REF>
+<XPD:REF name="Views[1]">thKmRVpkHE6/p34RFSZ0CwAA</XPD:REF>
+<XPD:REF name="Views[2]">b1iwNgtQi0Gd0O+EIxvK2QAA</XPD:REF>
 <XPD:REF name="Views[3]">eWciR9qkvUeX6Hk3SxLRCAAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Connections[1]" type="UMLAssociationEnd" guid="yf8SvljBU0avYyJMnAkCIQAA">
@@ -2313,8 +2313,8 @@
 <XPD:REF name="Participant">cLmSyh557029DzKD4EcpgQAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">p+eltdmLd02UzYIHsfU32gAA</XPD:REF>
-<XPD:REF name="Views[1]">m2Bj08KbMEa8K5vLTx1ZYQAA</XPD:REF>
-<XPD:REF name="Views[2]">CRyf0cWHsU6EtqGUOeD5KwAA</XPD:REF>
+<XPD:REF name="Views[1]">CRyf0cWHsU6EtqGUOeD5KwAA</XPD:REF>
+<XPD:REF name="Views[2]">m2Bj08KbMEa8K5vLTx1ZYQAA</XPD:REF>
 <XPD:REF name="Views[3]">rkkK4x6Ea0aX/9UPSnMqxwAA</XPD:REF>
 </XPD:OBJ>
 </XPD:OBJ>
