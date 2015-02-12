@@ -1,0 +1,39 @@
+body.login{
+	background-color : white !important;
+}
+
+.login .content{
+	border: #458FFF solid 1px;
+	-webkit-border-radius: 7px !important;
+     -moz-border-radius: 7px !important;
+          border-radius: 7px !important;
+}
+
+#navigation #brand {
+	padding-right: 5px;
+}
+
+.ui-resizable-handle.ui-resizable-e {
+cursor: auto;
+}
+
+.table tr th, .table tr td {
+padding: 10px;
+border-top: 1px dotted #ddd;
+text-transform: uppercase;
+}
+
+img.pasfoto {
+height: 150px;
+max-width: 130px;
+vertical-align: middle;
+border: 0;
+-ms-interpolation-mode: bicubic;
+}
+
+body {
+text-transform: uppercase;
+background: #fff;
+font-family: "Open Sans",sans-serif;
+font-size: 13px !important;
+}
